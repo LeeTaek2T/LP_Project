@@ -44,4 +44,32 @@ public class EventItem {
         this.createdAt = createdAt;
         this.productSku = productSku;
     }
+
+    public Long getId() {
+        return Id;
+    }
+
+    public Event getEvent() {
+        return event;
+    }
+
+    public Long getSalePrice() {
+        return salePrice;
+    }
+
+    public Long getQuotaPerUser() {
+        return quotaPerUser;
+    }
+
+    public Long getStock() {
+        return stock;
+    }
+
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    public ProductSku getProductSku() {
+        return productSku;
+    }
 }
