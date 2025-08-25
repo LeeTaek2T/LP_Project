@@ -21,11 +21,11 @@ public class EventController {
 
     @PostMapping("/event")
     public ResponseEntity<URI> registerEvent(@RequestBody EventRequest eventRequest){
-        Long registerdEventId = eventService.registerEvent(eventRequest);
+        Long registeredEventId = eventService.registerEvent(eventRequest);
         URI location = ServletUriComponentsBuilder
                 .fromCurrentRequestUri()
                 .path("/{id}")
-                .buildAndExpand(registerdEventId)
+                .buildAndExpand(registeredEventId)
                 .toUri();
         return ResponseEntity.created(location).build();
     }
