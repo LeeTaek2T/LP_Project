@@ -6,7 +6,7 @@ import com.example.lp.event.service.EventService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
-
+import java.util.List;
 import java.net.URI;
 
 @RestController
@@ -32,6 +32,11 @@ public class EventController {
     public ResponseEntity<EventResponse> getEvent(@PathVariable Long eventId){
         EventResponse eventResponse = eventService.getEvent(eventId);
         return ResponseEntity.ok(eventResponse);
+    }
 
+    @GetMapping("/event")
+    public ResponseEntity<List<EventResponse>> getAllEvent(){
+        List<EventResponse> eventResponseList = eventService.getAllEvent();
+        return ResponseEntity.ok(eventResponseList);
     }
 }
