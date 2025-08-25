@@ -1,7 +1,8 @@
 package com.example.lp.product.entity;
 
+import com.example.lp.event.entity.EventItem;
 import jakarta.persistence.*;
-
+import java.util.List;
 import java.time.LocalDateTime;
 
 @Entity
@@ -39,6 +40,9 @@ public class ProductSku {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_id", nullable = false)
     private Product product;
+
+    @OneToMany(mappedBy = "eventItem", cascade = CascadeType.ALL, orphanRemoval = true)
+    List<EventItem> eventItemList;
 
     public ProductSku(){}
 

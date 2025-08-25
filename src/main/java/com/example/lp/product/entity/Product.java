@@ -26,7 +26,6 @@ public class Product {
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ProductSku> productSkuList = new ArrayList<>();
 
-
     public Product(){}
 
     public Product(String name, String brand, LocalDateTime createdAt) {

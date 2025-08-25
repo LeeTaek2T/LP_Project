@@ -1,5 +1,6 @@
 package com.example.lp.event.entity;
 
+import com.example.lp.product.entity.ProductSku;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
@@ -28,13 +29,19 @@ public class EventItem {
     @Column(name = "created_at", nullable = false)
     LocalDateTime createdAt;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "sku_id", nullable = false)
+    ProductSku productSku;
+
     public EventItem(){}
 
-    public EventItem(Event event, Long salePrice, Long quotaPerUser, Long stock, LocalDateTime createdAt) {
+    public EventItem(Event event, Long salePrice, Long quotaPerUser, Long stock, LocalDateTime createdAt,
+                     ProductSku productSku) {
         this.event = event;
         this.salePrice = salePrice;
         this.quotaPerUser = quotaPerUser;
         this.stock = stock;
         this.createdAt = createdAt;
+        this.productSku = productSku;
     }
 }
