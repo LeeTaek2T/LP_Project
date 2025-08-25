@@ -40,4 +40,20 @@ public class Event {
     public Long getId() {
         return id;
     }
+
+    public String getName() {
+        return name;
+    }
+
+    public LocalDateTime getStartAt() {
+        return startAt;
+    }
+
+    public LocalDateTime getEndAt() {
+        return endAt;
+    }
+
+    public String getState() {
+        return state;
+    }
 }

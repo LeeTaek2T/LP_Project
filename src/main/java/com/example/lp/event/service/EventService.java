@@ -1,6 +1,7 @@
 package com.example.lp.event.service;
 
 import com.example.lp.event.dto.Request.EventRequest;
+import com.example.lp.event.dto.Response.EventResponse;
 import com.example.lp.event.entity.Event;
 import com.example.lp.event.mapper.EventMapper;
 import com.example.lp.event.repository.EventRepository;
@@ -20,5 +21,12 @@ public class EventService {
         Event event = eventMapper.requestToEntity(eventRequest);
         Event registerdEvent = eventRepository.save(event);
         return registerdEvent.getId();
+    }
+
+    public EventResponse getEvent(Long eventId) {
+        Event event = eventRepository.findById(eventId)
+                .orElseThrow(() -> new RuntimeException());
+        EventResponse eventResponse = eventMapper.entityToResponse(event);
+        return eventResponse;
     }
 }
