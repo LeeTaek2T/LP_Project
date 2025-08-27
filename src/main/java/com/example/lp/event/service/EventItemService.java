@@ -27,8 +27,8 @@ public class EventItemService {
         this.productSkuRepository = productSkuRepository;
     }
 
-    public Long registerEventItem(EventItemRequest eventItemRequest){
-        Event event = eventRepository.findById(eventItemRequest.eventId())
+    public Long registerEventItem(Long eventId, EventItemRequest eventItemRequest){
+        Event event = eventRepository.findById(eventId)
                 .orElseThrow(() -> new RuntimeException());
         ProductSku productSku = productSkuRepository.findById(eventItemRequest.skuId())
                 .orElseThrow(() -> new RuntimeException());
