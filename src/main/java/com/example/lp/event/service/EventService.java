@@ -1,6 +1,7 @@
 package com.example.lp.event.service;
 
 import com.example.lp.event.dto.Request.EventRequest;
+import com.example.lp.event.dto.Request.EventStateRequest;
 import com.example.lp.event.dto.Response.EventResponse;
 import com.example.lp.event.entity.Event;
 import com.example.lp.event.mapper.EventMapper;
@@ -46,5 +47,14 @@ public class EventService {
             eventResponseList.add(eventResponse);
         }
         return eventResponseList;
+    }
+
+    public EventResponse updateEvent(Long eventId, EventStateRequest eventStateRequest) {
+        Event event = eventRepository.findById(eventId)
+                .orElseThrow(() -> new RuntimeException());
+        Event newEvent = new Event(event.getId(), event.getName(), event.getStartAt(), event.getEndAt(), eventStateRequest.state());
+        Event updateEvent = eventRepository.save(newEvent);
+        EventResponse eventResponse = eventMapper.entityToResponse(updateEvent);
+        return eventResponse;
     }
 }

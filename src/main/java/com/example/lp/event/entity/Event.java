@@ -37,6 +37,14 @@ public class Event {
         this.state = state;
     }
 
+    public Event(Long id, String name, LocalDateTime startAt, LocalDateTime endAt, String state) {
+        this.id = id;
+        this.name = name;
+        this.startAt = startAt;
+        this.endAt = endAt;
+        this.state = state;
+    }
+
     public Long getId() {
         return id;
     }
