@@ -1,6 +1,6 @@
 package com.example.lp.product.dto.response;
 
-public record ProductSkuResponse(Long skuId,
+public record ProductSkuResponse(Long productSkuId,
                                  Long productId,
                                 String skuCode,
                                 String color,
