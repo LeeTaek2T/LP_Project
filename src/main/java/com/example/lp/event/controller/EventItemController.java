@@ -1,11 +1,12 @@
 package com.example.lp.event.controller;
 
 import com.example.lp.event.dto.Request.EventItemRequest;
+import com.example.lp.event.dto.Response.EventItemResponse;
 import com.example.lp.event.service.EventItemService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
-
+import java.util.List;
 import java.net.URI;
 
 @RestController
@@ -27,5 +28,11 @@ public class EventItemController {
                 .buildAndExpand(registeredEventItemId)
                 .toUri();
         return ResponseEntity.created(location).build();
+    }
+
+    @GetMapping("/api/{eventId}/eventItem")
+    public ResponseEntity<List<EventItemResponse>> getAllEventItem(@PathVariable Long eventId){
+        List<EventItemResponse> eventItemResponseList = eventItemService.getAllEventItem(eventId);
+        return ResponseEntity.ok(eventItemResponseList);
     }
 }
