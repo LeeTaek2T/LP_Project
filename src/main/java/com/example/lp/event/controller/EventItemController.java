@@ -10,7 +10,7 @@ import java.util.List;
 import java.net.URI;
 
 @RestController
-@RequestMapping
+@RequestMapping("/api")
 public class EventItemController {
     private final EventItemService eventItemService;
 
@@ -30,7 +30,7 @@ public class EventItemController {
         return ResponseEntity.created(location).build();
     }
 
-    @GetMapping("/api/{eventId}/eventItem")
+    @GetMapping("/{eventId}/eventItem")
     public ResponseEntity<List<EventItemResponse>> getAllEventItem(@PathVariable Long eventId){
         List<EventItemResponse> eventItemResponseList = eventItemService.getAllEventItem(eventId);
         return ResponseEntity.ok(eventItemResponseList);
