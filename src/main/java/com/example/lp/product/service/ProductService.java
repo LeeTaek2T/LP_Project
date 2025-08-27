@@ -41,4 +41,11 @@ public class ProductService {
         }
         return productResponseList;
     }
+
+    public ProductResponse getProductById(Long productId) {
+        Product product = productRepository.findById(productId)
+                .orElseThrow(() -> new RuntimeException());
+        ProductResponse productResponse = productMapper.entityToResponse(product);
+        return productResponse;
+    }
 }

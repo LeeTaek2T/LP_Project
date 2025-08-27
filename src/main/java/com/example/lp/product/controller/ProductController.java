@@ -33,4 +33,10 @@ public class ProductController {
         List<ProductResponse> productResponseList = productService.getAllProduct();
         return ResponseEntity.ok(productResponseList);
     }
+
+    @GetMapping("/product/{productId}")
+    public ResponseEntity<ProductResponse> getProductById(@RequestParam Long productId){
+        ProductResponse productResponse = productService.getProductById(productId);
+        return ResponseEntity.ok(productResponse);
+    }
 }
