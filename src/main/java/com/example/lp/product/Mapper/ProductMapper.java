@@ -11,11 +11,11 @@ import java.time.LocalDateTime;
 public class ProductMapper {
 
     public Product requestToEntity(ProductRequest productRequest){
-        return new Product(productRequest.brand(), productRequest.name(), LocalDateTime.now());
+        return new Product(productRequest.name(), LocalDateTime.now());
     }
 
     public ProductResponse entityToResponse(Product product){
-        return new ProductResponse(product.getId(), product.getName(), product.getBrand());
+        return new ProductResponse(product.getId(), product.getName());
     }
 
 }

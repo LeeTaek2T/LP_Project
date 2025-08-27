@@ -10,11 +10,11 @@ import java.time.LocalDateTime;
 public class ProductSku {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "sku_id")
+    @Column(name = "product_sku_id")
     private Long id;
 
     @Column(name = "sku_code", length = 100, nullable = false)
-    private String skuCode;
+    private String productSkuCode;
 
     @Column(name = "color", length = 5, nullable = false)
     private String color;
@@ -46,10 +46,10 @@ public class ProductSku {
 
     public ProductSku(){}
 
-    public ProductSku(Product product, String skuCode, String color, String size, int stock, int price,
+    public ProductSku(Product product, String productSkuCode, String color, String size, int stock, int price,
                       Boolean inActive, LocalDateTime createdAt, LocalDateTime updatedAt){
         this.product = product;
-        this.skuCode = skuCode;
+        this.productSkuCode = productSkuCode;
         this.color = color;
         this.size = size;
         this.stock = stock;
@@ -63,8 +63,8 @@ public class ProductSku {
         return id;
     }
 
-    public String getSkuCode() {
-        return skuCode;
+    public String getProductSkuCode() {
+        return productSkuCode;
     }
 
     public String getColor() {

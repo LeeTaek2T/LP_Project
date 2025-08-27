@@ -17,9 +17,6 @@ public class Product {
     @Column(name="name", length = 255, nullable = false)
     private String name;
 
-    @Column(name="brand", length = 255, nullable = false)
-    private String brand;
-
     @Column(name="created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
 
@@ -28,8 +25,7 @@ public class Product {
 
     public Product(){}
 
-    public Product(String name, String brand, LocalDateTime createdAt) {
-        this.brand = brand;
+    public Product(String name, LocalDateTime createdAt) {
         this.name = name;
         this.createdAt = createdAt;
     }
@@ -40,9 +36,5 @@ public class Product {
 
     public String getName() {
         return name;
-    }
-
-    public String getBrand() {
-        return brand;
     }
 }

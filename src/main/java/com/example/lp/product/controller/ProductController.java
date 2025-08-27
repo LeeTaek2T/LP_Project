@@ -33,6 +33,4 @@ public class ProductController {
         List<ProductResponse> productResponseList = productService.getAllProduct();
         return ResponseEntity.ok(productResponseList);
     }
-
-
 }

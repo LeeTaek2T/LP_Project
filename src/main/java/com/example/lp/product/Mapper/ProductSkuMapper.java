@@ -18,7 +18,7 @@ public class ProductSkuMapper {
     }
 
     public ProductSkuResponse entityToResponse(ProductSku productSku){
-        return new ProductSkuResponse(productSku.getId(), productSku.getProduct().getId(),productSku.getSkuCode(), productSku.getColor(),
+        return new ProductSkuResponse(productSku.getId(), productSku.getProduct().getId(),productSku.getProductSkuCode(), productSku.getColor(),
                 productSku.getSize(), productSku.getStock(), productSku.getPrice(), productSku.getInActive());
     }
 }
