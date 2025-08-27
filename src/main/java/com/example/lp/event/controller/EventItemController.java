@@ -35,4 +35,10 @@ public class EventItemController {
         List<EventItemResponse> eventItemResponseList = eventItemService.getAllEventItem(eventId);
         return ResponseEntity.ok(eventItemResponseList);
     }
+
+    @GetMapping("/eventItem/{eventItemId}")
+    public ResponseEntity<EventItemResponse> getEventItem(@PathVariable Long eventItemId){
+        EventItemResponse eventItemResponse = eventItemService.getEventItem(eventItemId);
+        return ResponseEntity.ok(eventItemResponse);
+    }
 }

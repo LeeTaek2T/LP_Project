@@ -48,6 +48,13 @@ public class EventItemService {
         return eventItemResponseList;
     }
 
+    public EventItemResponse getEventItem(Long eventItemId) {
+        EventItem eventItem = eventItemRepository.findById(eventItemId)
+                .orElseThrow(() -> new RuntimeException());
+        EventItemResponse eventItemResponse = eventItemMapper.entityToResponse(eventItem);
+        return eventItemResponse;
+    }
+
     private List<EventItemResponse> convertToEventItemResponseList(List<EventItem> eventItemList){
         List<EventItemResponse> eventItemResponseList = new ArrayList<>();
         for (EventItem eventItem : eventItemList) {
