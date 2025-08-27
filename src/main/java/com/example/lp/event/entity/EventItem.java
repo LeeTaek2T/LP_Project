@@ -30,7 +30,7 @@ public class EventItem {
     LocalDateTime createdAt;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "sku_id", nullable = false)
+    @JoinColumn(name = "product_sku_id", nullable = false)
     ProductSku productSku;
 
     public EventItem(){}

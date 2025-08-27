@@ -41,7 +41,7 @@ public class ProductSku {
     @JoinColumn(name = "product_id", nullable = false)
     private Product product;
 
-    @OneToMany(mappedBy = "eventItem", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "productSku", cascade = CascadeType.ALL, orphanRemoval = true)
     List<EventItem> eventItemList;
 
     public ProductSku(){}
