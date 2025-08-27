@@ -29,7 +29,7 @@ public class ProductSkuController {
         return ResponseEntity.created(location).build();
     }
 
-    @GetMapping("/productSku/{productId}")
+    @GetMapping("/{productId}/productSku")
     public ResponseEntity<List<ProductSkuResponse>> getAllProductSku(@PathVariable("productId") Long productId){
         List<ProductSkuResponse> productSkuResponseList = productSkuService.getAllProductSku(productId);
         return ResponseEntity.ok(productSkuResponseList);

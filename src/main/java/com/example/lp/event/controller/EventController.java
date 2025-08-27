@@ -28,7 +28,7 @@ public class EventController {
         return ResponseEntity.created(location).build();
     }
 
-    @GetMapping("/event/{id}")
+    @GetMapping("/event/{eventId}")
     public ResponseEntity<EventResponse> getEvent(@PathVariable Long eventId){
         EventResponse eventResponse = eventService.getEvent(eventId);
         return ResponseEntity.ok(eventResponse);
