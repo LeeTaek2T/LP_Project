@@ -24,8 +24,8 @@ public class ProductSkuService {
         this.productSkuMapper = productSkuMapper;
     }
 
-    public Long registerProductSku(ProductSkuRequest productSkuRequest){
-        Product product = productRepository.findById(productSkuRequest.productId())
+    public Long registerProductSku(ProductSkuRequest productSkuRequest, Long productId) {
+        Product product = productRepository.findById(productId)
                 .orElseThrow(() -> new RuntimeException(""));
         ProductSku productSku = productSkuMapper.requestToEntity(productSkuRequest, product);
         ProductSku registerdProductSku = productSkuRepository.save(productSku);

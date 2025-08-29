@@ -18,9 +18,10 @@ public class ProductSkuController {
         this.productSkuService=productSkuService;
     }
 
-    @PostMapping("/productSku")
-    public ResponseEntity<URI> registerProductSku(@RequestBody ProductSkuRequest productSkuRequest){
-        Long registedProductSkuId = productSkuService.registerProductSku(productSkuRequest);
+    @PostMapping("product/{productId}/productSku")
+    public ResponseEntity<URI> registerProductSku(@RequestBody ProductSkuRequest productSkuRequest,
+                                                  @PathVariable Long productId){
+        Long registedProductSkuId = productSkuService.registerProductSku(productSkuRequest, productId);
         URI location = ServletUriComponentsBuilder
                 .fromCurrentRequest()
                 .path("/{id}")
@@ -29,7 +30,7 @@ public class ProductSkuController {
         return ResponseEntity.created(location).build();
     }
 
-    @GetMapping("/{productId}/productSku")
+    @GetMapping("/product/{productId}/productSku")
     public ResponseEntity<List<ProductSkuResponse>> getAllProductSku(@PathVariable("productId") Long productId){
         List<ProductSkuResponse> productSkuResponseList = productSkuService.getAllProductSku(productId);
         return ResponseEntity.ok(productSkuResponseList);
