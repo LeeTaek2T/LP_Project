@@ -18,7 +18,7 @@ public class EventItemController {
         this.eventItemService = eventItemService;
     }
 
-    @PostMapping("/{eventId}/eventItem")
+    @PostMapping("/event/{eventId}/eventItem")
     public ResponseEntity<URI> registerEventItem(@PathVariable Long eventId,
                                                  @RequestBody EventItemRequest eventItemRequest){
         Long registeredEventItemId = eventItemService.registerEventItem(eventId, eventItemRequest);
@@ -30,7 +30,7 @@ public class EventItemController {
         return ResponseEntity.created(location).build();
     }
 
-    @GetMapping("/{eventId}/eventItem")
+    @GetMapping("/event/{eventId}/eventItem")
     public ResponseEntity<List<EventItemResponse>> getAllEventItem(@PathVariable Long eventId){
         List<EventItemResponse> eventItemResponseList = eventItemService.getAllEventItem(eventId);
         return ResponseEntity.ok(eventItemResponseList);

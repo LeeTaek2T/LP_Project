@@ -35,7 +35,7 @@ public class EventItemService {
     public Long registerEventItem(Long eventId, EventItemRequest eventItemRequest){
         Event event = eventRepository.findById(eventId)
                 .orElseThrow(() -> new RuntimeException());
-        ProductSku productSku = productSkuRepository.findById(eventItemRequest.skuId())
+        ProductSku productSku = productSkuRepository.findById(eventItemRequest.productSkuId())
                 .orElseThrow(() -> new RuntimeException());
         EventItem eventItem = eventItemMapper.requestToEntity(eventItemRequest, event, productSku);
         EventItem registeredEventItem = eventItemRepository.save(eventItem);
