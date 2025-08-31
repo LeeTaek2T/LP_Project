@@ -1,8 +1,7 @@
 package com.example.lp.security.filter;
 
-import com.example.lp.member.entity.Member;
-import com.example.lp.security.jwt.Util.JwtUtil;
-import com.example.lp.security.jwt.dto.CustomMemberDetail;
+import com.example.lp.jwt.Util.JwtUtil;
+import com.example.lp.jwt.dto.CustomMemberDetail;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -41,7 +40,7 @@ public class JwtFilter extends OncePerRequestFilter {
                 response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
                 return;
             }
-            String loginEmailId = jwtUtil.getLoginEmailId(token);
+            String loginEmailId = jwtUtil.getEmail(token);
             String role = jwtUtil.getRole(token);
 
             String authority = role.startsWith("ROLE_") ? role : "ROLE_" + role;

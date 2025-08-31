@@ -1,7 +1,7 @@
 package com.example.lp.security.config;
 
 import com.example.lp.security.filter.JwtFilter;
-import com.example.lp.security.jwt.Util.JwtUtil;
+import com.example.lp.jwt.Util.JwtUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -42,8 +42,8 @@ public class SecurityConfig {
                 .httpBasic((auth) -> auth.disable());
         http
                 .authorizeHttpRequests((auth) -> auth
-                        .requestMatchers("/api/product/**","/api/event/**","/api/productSku/**","./api/eventItem/**").permitAll()
-                        .requestMatchers("/api/member/login", "/api/member/signUp").permitAll()
+                        .requestMatchers("/api/product/**","/api/event/**","/api/productSku/**","/api/eventItem/**").permitAll()
+                        .requestMatchers("/api/member/signUp","/api/member/login","/api/member/refresh").permitAll()
                         .requestMatchers("/api/member/login/admin").hasRole("ADMIN")
                         .anyRequest().authenticated()
                 );

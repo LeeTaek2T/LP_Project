@@ -1,4 +1,4 @@
-package com.example.lp.security.jwt.dto;
+package com.example.lp.jwt.dto;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -7,11 +7,11 @@ import java.util.Collection;
 import java.util.List;
 
 public class CustomMemberDetail implements UserDetails {
-    private final String loginId;
+    private final String userEmail;
     private final String role;
 
-    public CustomMemberDetail(String loginId, String role) {
-        this.loginId = loginId;
+    public CustomMemberDetail(String userEmail, String role) {
+        this.userEmail = userEmail;
         this.role = role;
     }
 
@@ -45,6 +45,6 @@ public class CustomMemberDetail implements UserDetails {
 
     @Override
     public String getUsername() {
-        return this.loginId;
+        return this.userEmail;
     }
 }

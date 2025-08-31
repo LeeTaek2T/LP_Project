@@ -26,8 +26,8 @@ public class Member{
     @Column(name = "phone_number", length = 13, nullable = false)
     private String phoneNumber;
 
-    @Column(name = "is_admin", nullable = false)
-    private Boolean isAdmin;
+    @Column(name = "role", nullable = false)
+    private String role;
 
     @Column(name = "is_seller", nullable = false)
     private Boolean isSeller;
@@ -43,12 +43,12 @@ public class Member{
 
     public Member() {}
 
-    public Member(String email, String password, String phoneNumber, Boolean isAdmin, Boolean isSeller,
+    public Member(String email, String password, String phoneNumber, String role, Boolean isSeller,
                   String state, LocalDateTime createdAt, String userName) {
         this.email = email;
         this.password = password;
         this.phoneNumber = phoneNumber;
-        this.isAdmin = isAdmin;
+        this.role = role;
         this.isSeller = isSeller;
         this.state = state;
         this.createdAt = createdAt;
@@ -59,11 +59,15 @@ public class Member{
         this.email = email;
         this.password = password;
         this.phoneNumber = phoneNumber;
-        this.isAdmin = false;
+        this.role = "ROLE_BUYER";
         this.isSeller = false;
         this.state = "ACTIVE";
         this.createdAt = LocalDateTime.now();
         this.userName = userName;
+    }
+
+    public Long getId() {
+        return this.id;
     }
 
     public String getPassword(){
@@ -74,7 +78,7 @@ public class Member{
         return this.email;
     }
 
-    public Boolean getIsAdmin() {
-        return this.isAdmin;
+    public String getRole() {
+        return this.role;
     }
 }

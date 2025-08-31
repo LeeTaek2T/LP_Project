@@ -1,9 +1,11 @@
 package com.example.lp.member.controller;
 
+import com.example.lp.jwt.dto.Response.AccessTokenResponse;
 import com.example.lp.member.dto.request.LoginRequest;
 import com.example.lp.member.dto.request.SignUpRequest;
 import com.example.lp.member.service.MemberService;
-import com.example.lp.security.jwt.Util.JwtUtil;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -30,14 +32,28 @@ public class MemberController {
     }
 
     @PostMapping("/member/login")
-    public ResponseEntity<String> login(@RequestBody LoginRequest loginRequest) {
-        String token = memberService.login(loginRequest);
-        return ResponseEntity.ok(token);
+    public ResponseEntity<AccessTokenResponse> login(@RequestBody LoginRequest req,
+                                                     HttpServletRequest httpReq,
+                                                     HttpServletResponse httpRes) {
+        AccessTokenResponse body = memberService.login(req, httpReq, httpRes);
+        return ResponseEntity.ok(body);
+    }
+
+    @PostMapping("/member/refresh")
+    public ResponseEntity<AccessTokenResponse> refresh(HttpServletRequest req, HttpServletResponse res) {
+        var body = memberService.refresh(req, res);
+        return ResponseEntity.ok(body);
+    }
+
+    @PostMapping("/member/logoutAll")
+    public ResponseEntity<Void> logoutAll(Authentication member, HttpServletResponse res) {
+        memberService.logoutAll(member, res);
+        return ResponseEntity.noContent().build();
     }
 
     @GetMapping("/member/info")
-    public ResponseEntity<String> getMemberInfo(Authentication auth) {
-        String response = memberService.getMemberInfo(auth);
+    public ResponseEntity<String> getMemberInfo(Authentication member) {
+        String response = memberService.getMemberInfo(member);
         return ResponseEntity.ok(response);
     }
 }
