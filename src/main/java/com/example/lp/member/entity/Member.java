@@ -1,5 +1,6 @@
 package com.example.lp.member.entity;
 
+import com.example.lp.cart.entity.Cart;
 import jakarta.persistence.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -40,6 +41,9 @@ public class Member{
 
     @Column(name = "user_name", nullable = false)
     private String userName;
+
+    @OneToMany(mappedBy = "cart", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Cart cart;
 
     public Member() {}
 

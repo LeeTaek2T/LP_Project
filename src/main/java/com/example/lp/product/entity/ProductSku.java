@@ -1,5 +1,6 @@
 package com.example.lp.product.entity;
 
+import com.example.lp.cart.entity.Cart;
 import com.example.lp.event.entity.EventItem;
 import jakarta.persistence.*;
 import java.util.List;
@@ -43,6 +44,9 @@ public class ProductSku {
 
     @OneToMany(mappedBy = "productSku", cascade = CascadeType.ALL, orphanRemoval = true)
     List<EventItem> eventItemList;
+
+    @OneToMany(mappedBy = "productSku", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Cart> cartList;
 
     public ProductSku(){}
 
