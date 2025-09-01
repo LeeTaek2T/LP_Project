@@ -2,13 +2,10 @@ package com.example.lp.cart.service;
 
 import com.example.lp.cart.dto.reqeust.CartRequest;
 import com.example.lp.cart.dto.response.CartResponse;
-import com.example.lp.cart.dto.response.ProductInCartResponse;
 import com.example.lp.cart.entity.Cart;
 import com.example.lp.cart.repository.CartRepository;
 import com.example.lp.member.entity.Member;
 import com.example.lp.member.repository.MemberRepository;
-import com.example.lp.product.dto.response.ProductResponse;
-import com.example.lp.product.dto.response.ProductSkuResponse;
 import com.example.lp.product.entity.Product;
 import com.example.lp.product.entity.ProductSku;
 import com.example.lp.product.repository.ProductRepository;
