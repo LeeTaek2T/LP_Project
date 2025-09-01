@@ -42,8 +42,8 @@ public class Member{
     @Column(name = "user_name", nullable = false)
     private String userName;
 
-    @OneToMany(mappedBy = "cart", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Cart cart;
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Cart> cartList;
 
     public Member() {}
 

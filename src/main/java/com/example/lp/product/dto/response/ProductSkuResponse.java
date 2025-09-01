@@ -5,6 +5,6 @@ public record ProductSkuResponse(Long productSkuId,
                                 String skuCode,
                                 String color,
                                 String size,
-                                int stock,
-                                int price,
+                                Long stock,
+                                Long price,
                                 boolean inActive) {}

@@ -24,10 +24,10 @@ public class ProductSku {
     private String size;
 
     @Column(name = "stock", nullable = false)
-    private int stock;
+    private Long stock;
 
     @Column(name = "price",nullable = false)
-    private int price;
+    private Long price;
 
     @Column(name = "in_active", nullable = false)
     private Boolean inActive;
@@ -50,7 +50,7 @@ public class ProductSku {
 
     public ProductSku(){}
 
-    public ProductSku(Product product, String productSkuCode, String color, String size, int stock, int price,
+    public ProductSku(Product product, String productSkuCode, String color, String size, Long stock, Long price,
                       Boolean inActive, LocalDateTime createdAt, LocalDateTime updatedAt){
         this.product = product;
         this.productSkuCode = productSkuCode;
@@ -79,11 +79,11 @@ public class ProductSku {
         return size;
     }
 
-    public int getStock() {
+    public Long getStock() {
         return stock;
     }
 
-    public int getPrice() {
+    public Long getPrice() {
         return price;
     }
 
