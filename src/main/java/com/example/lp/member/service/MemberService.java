@@ -5,6 +5,7 @@ import com.example.lp.jwt.entity.RefreshToken;
 import com.example.lp.jwt.service.RefreshTokenService;
 import com.example.lp.member.dto.request.LoginRequest;
 import com.example.lp.member.dto.request.SignUpRequest;
+import com.example.lp.member.dto.response.MemberInfoResponse;
 import com.example.lp.member.entity.Member;
 import com.example.lp.member.repository.MemberRepository;
 import com.example.lp.jwt.Util.JwtUtil;
@@ -122,10 +123,12 @@ public class MemberService {
         clearRefreshCookie(res);                // 쿠키 삭제
     }
 
-    public String getMemberInfo(Authentication member) {
+    public MemberInfoResponse getMemberInfo(Authentication member) {
         Member registerdMember = memberRepository.findByEmail(member.getName())
                 .orElseThrow(() -> new RuntimeException());
-        return registerdMember.getEmail();
+        MemberInfoResponse memberInfoResponse = new MemberInfoResponse(registerdMember.getEmail(),
+                registerdMember.getPhoneNumber(), registerdMember.getPhoneNumber());
+        return memberInfoResponse;
     }
 
 

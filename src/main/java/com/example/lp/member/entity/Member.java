@@ -85,4 +85,12 @@ public class Member{
     public String getRole() {
         return this.role;
     }
+
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public String getUserName() {
+        return userName;
+    }
 }

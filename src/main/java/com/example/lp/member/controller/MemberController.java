@@ -3,6 +3,7 @@ package com.example.lp.member.controller;
 import com.example.lp.jwt.dto.Response.AccessTokenResponse;
 import com.example.lp.member.dto.request.LoginRequest;
 import com.example.lp.member.dto.request.SignUpRequest;
+import com.example.lp.member.dto.response.MemberInfoResponse;
 import com.example.lp.member.service.MemberService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -52,8 +53,8 @@ public class MemberController {
     }
 
     @GetMapping("/member/info")
-    public ResponseEntity<String> getMemberInfo(Authentication member) {
-        String response = memberService.getMemberInfo(member);
-        return ResponseEntity.ok(response);
+    public ResponseEntity<MemberInfoResponse> getMemberInfo(Authentication member) {
+        MemberInfoResponse memberInfoResponse = memberService.getMemberInfo(member);
+        return ResponseEntity.ok(memberInfoResponse);
     }
 }
