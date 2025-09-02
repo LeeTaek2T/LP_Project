@@ -32,6 +32,9 @@ public class Order {
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<OrderDetail> orderDetailList;
 
+    @OneToOne(fetch = FetchType.LAZY, mappedBy = "order")
+    private TossPayment tossPayment;
+
     public Order(){}
 
     public Order(Member member, Long totalAmount, String address, String postCode) {
