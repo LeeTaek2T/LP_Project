@@ -24,8 +24,7 @@ public class OrderController {
     }
 
     @PostMapping("/order")
-    public ResponseEntity<URI> createOrder(Authentication auth,
-                                           @RequestBody OrderRequest orderRequest) {
+    public ResponseEntity<URI> createOrder(Authentication auth, @RequestBody OrderRequest orderRequest) {
         Long createdOrderId = orderService.createOrder(orderRequest);
         URI location = ServletUriComponentsBuilder
                 .fromCurrentRequest()

@@ -2,6 +2,7 @@ package com.example.lp.product.entity;
 
 import com.example.lp.cart.entity.Cart;
 import com.example.lp.event.entity.EventItem;
+import com.example.lp.order.entity.OrderDetail;
 import jakarta.persistence.*;
 import java.util.List;
 import java.time.LocalDateTime;
@@ -47,6 +48,9 @@ public class ProductSku {
 
     @OneToMany(mappedBy = "productSku", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Cart> cartList;
+
+    @OneToMany(mappedBy = "productSku", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<OrderDetail> orderDetailList;
 
     public ProductSku(){}
 

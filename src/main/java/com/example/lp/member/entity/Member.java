@@ -2,6 +2,7 @@ package com.example.lp.member.entity;
 
 import com.example.lp.cart.entity.Cart;
 import com.example.lp.order.entity.Order;
+import com.example.lp.order.entity.OrderDetail;
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -43,6 +44,9 @@ public class Member{
 
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Order> orderList;
+
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<OrderDetail> orderDetailList;
 
     public Member() {}
 
