@@ -1,5 +1,6 @@
 package com.example.lp.order.service;
 
+import com.example.lp.member.entity.Member;
 import com.example.lp.order.dto.request.OrderProductRequest;
 import com.example.lp.order.entity.Order;
 import com.example.lp.order.entity.OrderDetail;
@@ -19,12 +20,13 @@ public class OrderDetailService {
         this.productSkuRepository = productSkuRepository;
     }
 
-    public void createOrderDetail(Order order, List<OrderProductRequest> orderProductRequestList){
+    public void createOrderDetail(Order order, Member member,
+                                  List<OrderProductRequest> orderProductRequestList){
         for(OrderProductRequest orderProductRequest : orderProductRequestList){
             ProductSku productSku = productSkuRepository.findById(orderProductRequest.productSkuId())
                     .orElseThrow(() -> new RuntimeException("<UNK>"));
             OrderDetail orderDetail = new OrderDetail(productSku.getPrice(), productSku.getProduct().getName(),
-                    orderProductRequest.quantity(), productSku.getColor(), productSku, order);
+                    orderProductRequest.quantity(), productSku.getColor(), member, productSku, order);
             orderDetailRepository.save(orderDetail);
         }
 

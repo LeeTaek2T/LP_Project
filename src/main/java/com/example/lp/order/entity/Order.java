@@ -7,7 +7,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
-@Table(name = " order")
+@Table(name = "order_entity")
 public class Order {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -34,7 +34,8 @@ public class Order {
 
     public Order(){}
 
-    public Order(Long totalAmount, String address, String postCode) {
+    public Order(Member member, Long totalAmount, String address, String postCode) {
+        this.member = member;
         this.totalAmount = totalAmount;
         this.address = address;
         this.postCode = postCode;

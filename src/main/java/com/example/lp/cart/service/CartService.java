@@ -36,7 +36,6 @@ public class CartService {
                 .orElseThrow(() -> new RuntimeException("<UNK>"));
         Product product = productRepository.findById(productId)
                 .orElseThrow(() -> new RuntimeException("<UNK>"));
-        System.out.println(auth.getName());
         Member member = memberRepository.findByEmail(auth.getName())
                 .orElseThrow(() -> new RuntimeException());
         Cart cart = new Cart(member, cartRequest.quantity() ,product, productSku);

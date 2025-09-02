@@ -42,11 +42,13 @@ public class OrderDetail {
 
     public OrderDetail() {}
 
-    public OrderDetail(Long price, String name, Long quantity, String color, ProductSku productSku, Order order) {
+    public OrderDetail(Long price, String name, Long quantity, String color,
+                       Member member, ProductSku productSku, Order order) {
         this.price = price;
         this.name = name;
         this.quantity = quantity;
         this.color = color;
+        this.member = member;
         this.productSku = productSku;
         this.order = order;
     }
