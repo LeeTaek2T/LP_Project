@@ -1,13 +1,9 @@
 package com.example.lp.member.entity;
 
 import com.example.lp.cart.entity.Cart;
+import com.example.lp.order.entity.Order;
 import jakarta.persistence.*;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
-
 import java.time.LocalDateTime;
-import java.util.Collection;
-import java.util.Date;
 import java.util.List;
 
 @Entity
@@ -44,6 +40,9 @@ public class Member{
 
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Cart> cartList;
+
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Order> orderList;
 
     public Member() {}
 
