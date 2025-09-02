@@ -9,5 +9,5 @@ public record OrderRequest(
         Long totalAmount,
         String address,
         String postCode,
-        List<OrderProductRequest> orderProductRequestList
+        List<OrderProduct> orderProductRequestList
 ) {}
