@@ -1,4 +1,4 @@
-package com.example.lp.order.dto.request;
+package com.example.lp.tosspayment.dto.request;
 
 public record ConfirmRequest(String paymentKey,
                              String orderId,

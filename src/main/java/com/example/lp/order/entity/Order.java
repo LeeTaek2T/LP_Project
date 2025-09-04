@@ -1,6 +1,7 @@
 package com.example.lp.order.entity;
 
 import com.example.lp.member.entity.Member;
+import com.example.lp.tosspayment.entity.TossPayment;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
