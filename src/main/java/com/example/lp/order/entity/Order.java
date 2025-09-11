@@ -5,6 +5,7 @@ import com.example.lp.tosspayment.entity.TossPayment;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.List;
 
 @Entity
@@ -24,7 +25,13 @@ public class Order {
     private String postCode;
 
     @Column(name = "created_at")
-    private LocalDateTime createdAt;
+    private OffsetDateTime createdAt;
+
+    @Column(name = "state")
+    private String state;
+
+    @Column(name = "cancel_reason")
+    private String cancelReason;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id", nullable = false)
@@ -36,6 +43,7 @@ public class Order {
     @OneToOne(fetch = FetchType.LAZY, mappedBy = "order")
     private TossPayment tossPayment;
 
+
     public Order(){}
 
     public Order(Member member, Long totalAmount, String address, String postCode) {
@@ -43,10 +51,76 @@ public class Order {
         this.totalAmount = totalAmount;
         this.address = address;
         this.postCode = postCode;
-        this.createdAt = LocalDateTime.now();
+        this.createdAt = OffsetDateTime.now();
+        this.state = "결제 중";
     }
+
+    public Order(Long id,Member member, Long totalAmount, String address, String postCode,
+                 OffsetDateTime createdAt, String state){
+        this.id = id;
+        this.member = member;
+        this.totalAmount = totalAmount;
+        this.address = address;
+        this.postCode = postCode;
+        this.createdAt = createdAt;
+        this.state = state;
+    }
+
+    public Order(Long id,Member member, Long totalAmount, String address, String postCode,
+                 OffsetDateTime createdAt, String state, String cancelReason){
+        this.id = id;
+        this.member = member;
+        this.totalAmount = totalAmount;
+        this.address = address;
+        this.postCode = postCode;
+        this.createdAt = createdAt;
+        this.state = state;
+        this.cancelReason = cancelReason;
+    }
+
+
 
     public Long getId() {
         return this.id;
+    }
+
+    public List<OrderDetail> getOrderDetailList() {
+        return orderDetailList;
+    }
+
+    public Long getTotalAmount() {
+        return totalAmount;
+    }
+
+    public String getState() {
+        return state;
+    }
+
+    public TossPayment getTossPayment() {
+        return tossPayment;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public String getPostCode() {
+        return postCode;
+    }
+
+    public OffsetDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    public String getCancelReason() {
+        return cancelReason;
+    }
+
+    public Member getMember() {
+        return member;
+    }
+
+    public void changeState(String state) {
+        this.state = state;
     }
 }
