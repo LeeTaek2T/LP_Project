@@ -4,6 +4,8 @@ import com.example.lp.cart.entity.Cart;
 import com.example.lp.event.entity.EventItem;
 import com.example.lp.order.entity.OrderDetail;
 import jakarta.persistence.*;
+
+import java.time.OffsetDateTime;
 import java.util.List;
 import java.time.LocalDateTime;
 
@@ -24,27 +26,21 @@ public class ProductSku {
     @Column(name = "size", length = 5, nullable = false)
     private String size;
 
-    @Column(name = "stock", nullable = false)
-    private Long stock;
+    @Column(name = "quantity", nullable = false)
+    private Long quantity;
 
-    @Column(name = "price",nullable = false)
-    private Long price;
-
-    @Column(name = "in_active", nullable = false)
-    private Boolean inActive;
+    @Column(name = "state", nullable = false)
+    private String state;
 
     @Column(name = "created_at", nullable = false, updatable = false)
-    private LocalDateTime createdAt;
+    private OffsetDateTime createdAt;
 
     @Column(name = "updated_at", nullable = false)
-    private LocalDateTime updatedAt;
+    private OffsetDateTime updatedAt;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_id", nullable = false)
     private Product product;
-
-    @OneToMany(mappedBy = "productSku", cascade = CascadeType.ALL, orphanRemoval = true)
-    List<EventItem> eventItemList;
 
     @OneToMany(mappedBy = "productSku", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Cart> cartList;
@@ -52,17 +48,19 @@ public class ProductSku {
     @OneToMany(mappedBy = "productSku", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<OrderDetail> orderDetailList;
 
+    @OneToMany(mappedBy = "productSku", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ProductSkuImage> productSkuImagesList;
+
     public ProductSku(){}
 
-    public ProductSku(Product product, String productSkuCode, String color, String size, Long stock, Long price,
-                      Boolean inActive, LocalDateTime createdAt, LocalDateTime updatedAt){
+    public ProductSku(Product product, String productSkuCode, String color, String size, Long quantity,
+                      OffsetDateTime createdAt, OffsetDateTime updatedAt){
         this.product = product;
         this.productSkuCode = productSkuCode;
         this.color = color;
         this.size = size;
-        this.stock = stock;
-        this.price = price;
-        this.inActive = inActive;
+        this.quantity = quantity;
+        this.state = "";
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
     }
@@ -83,19 +81,31 @@ public class ProductSku {
         return size;
     }
 
-    public Long getStock() {
-        return stock;
+    public Long getQuantity() {
+        return quantity;
     }
 
-    public Long getPrice() {
-        return price;
-    }
-
-    public Boolean getInActive() {
-        return inActive;
+    public String getState() {
+        return state;
     }
 
     public Product getProduct() {
         return product;
+    }
+
+    public OffsetDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    public OffsetDateTime getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public void reduceAmount(Long amount){
+        this.quantity = this.quantity - amount;
+    }
+
+    public void plusAmount(Long amount) {
+        this.quantity = this.quantity + amount;
     }
 }
