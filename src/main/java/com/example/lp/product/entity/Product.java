@@ -1,5 +1,6 @@
 package com.example.lp.product.entity;
 
+import com.example.lp.event.entity.EventItem;
 import jakarta.persistence.*;
 
 import java.time.OffsetDateTime;
@@ -35,6 +36,9 @@ public class Product {
 
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ProductSku> productSkuList = new ArrayList<>();
+
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
+    List<EventItem> eventItemList;
 
     public Product(){}
 
