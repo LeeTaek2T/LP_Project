@@ -4,7 +4,7 @@ import com.example.lp.cart.entity.Cart;
 import com.example.lp.order.entity.Order;
 import com.example.lp.order.entity.OrderDetail;
 import jakarta.persistence.*;
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.List;
 
 @Entity
@@ -15,29 +15,35 @@ public class Member{
     @Column(name = "member_id")
     private Long id;
 
+    @Column(name = "user_name", nullable = false)
+    private String userName;
+
     @Column(name = "email",length = 50, nullable = false)
     private String email;
-
-    @Column(name = "password", nullable = false)
-    private String password;
 
     @Column(name = "phone_number", length = 13, nullable = false)
     private String phoneNumber;
 
+    @Column(name = "password", nullable = false)
+    private String password;
+
     @Column(name = "role", nullable = false)
     private String role;
 
-    @Column(name = "is_seller", nullable = false)
-    private Boolean isSeller;
-
-    @Column(name = "state", nullable = false)
-    private String state;
-
     @Column(name = "created_at", nullable = false)
-    private LocalDateTime createdAt;
+    private OffsetDateTime createdAt;
 
-    @Column(name = "user_name", nullable = false)
-    private String userName;
+    @Column(name = "updated_at", nullable = false)
+    private OffsetDateTime updatedAt;
+
+    @Column(name = "address")
+    private String address;
+
+    @Column(name = "address_detail")
+    private String addressDetail;
+
+    @Column(name = "postcode")
+    private String postcode;
 
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Cart> cartList;
@@ -50,14 +56,12 @@ public class Member{
 
     public Member() {}
 
-    public Member(String email, String password, String phoneNumber, String role, Boolean isSeller,
-                  String state, LocalDateTime createdAt, String userName) {
+    public Member(String email, String password, String phoneNumber, String role,
+                  String state, OffsetDateTime createdAt, String userName) {
         this.email = email;
         this.password = password;
         this.phoneNumber = phoneNumber;
         this.role = role;
-        this.isSeller = isSeller;
-        this.state = state;
         this.createdAt = createdAt;
         this.userName = userName;
     }
@@ -67,9 +71,7 @@ public class Member{
         this.password = password;
         this.phoneNumber = phoneNumber;
         this.role = "ROLE_BUYER";
-        this.isSeller = false;
-        this.state = "ACTIVE";
-        this.createdAt = LocalDateTime.now();
+        this.createdAt = OffsetDateTime.now();
         this.userName = userName;
     }
 
