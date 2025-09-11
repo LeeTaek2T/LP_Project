@@ -1,7 +1,6 @@
 package com.example.lp.tosspayment.entity;
 
 import com.example.lp.order.entity.Order;
-import com.example.lp.order.enums.TossPaymentStatus;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
@@ -24,12 +23,11 @@ public class TossPayment {
     @Column(name = "toss_payment_method")
     private String tossPaymentMethod;
 
-    @Enumerated(EnumType.STRING)
     @Column(name = "toss_payment_status")
-    private TossPaymentStatus tossPaymentStatus;
+    private String tossPaymentStatus;
 
     @Column(name = "reqeusted_at")
-    private LocalDateTime reqeustedAt;
+    private OffsetDateTime reqeustedAt;
 
     @Column(name = "approved_at")
     private OffsetDateTime approvedAt;
@@ -43,7 +41,7 @@ public class TossPayment {
 
     public TossPayment(){}
 
-    public TossPayment(String tossOrderId, Long totalAmount, LocalDateTime reqeustedAt, Order order){
+    public TossPayment(String tossOrderId, Long totalAmount, OffsetDateTime reqeustedAt, Order order){
         this.tossOrderId = tossOrderId;
         this.totalAmount = totalAmount;
         this.reqeustedAt = reqeustedAt;
@@ -51,7 +49,7 @@ public class TossPayment {
     }
 
     public TossPayment(Long id, String tossOrderId, String tossPaymentKey, String tossPaymentMethod,
-                       TossPaymentStatus tossPaymentStatus, LocalDateTime reqeustedAt,
+                       String tossPaymentStatus, OffsetDateTime reqeustedAt,
                        OffsetDateTime approvedAt, Long totalAmount, Order order) {
         this.id = id;
         this.tossOrderId = tossOrderId;
@@ -84,11 +82,11 @@ public class TossPayment {
         return this.tossPaymentMethod;
     }
 
-    public TossPaymentStatus getTossPaymentStatus() {
+    public String getTossPaymentStatus() {
         return tossPaymentStatus;
     }
 
-    public LocalDateTime getReqeustedAt() {
+    public OffsetDateTime getReqeustedAt() {
         return reqeustedAt;
     }
 
@@ -98,5 +96,9 @@ public class TossPayment {
 
     public Order getOrder() {
         return order;
+    }
+
+    public void changeStatus(String status){
+        this.tossPaymentStatus = status;
     }
 }
