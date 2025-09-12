@@ -22,24 +22,15 @@ public class Cart {
     private Member member;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "product_id", nullable = false)
-    private Product product;
-
-    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_sku_id", nullable = false)
     private ProductSku productSku;
 
     public Cart(){}
 
-    public Cart(Member member, Long quantity, Product product, ProductSku productSku) {
+    public Cart(Member member, Long quantity, ProductSku productSku) {
         this.member = member;
         this.quantity = quantity;
-        this.product = product;
         this.productSku = productSku;
-    }
-
-    public Product getProduct() {
-        return product;
     }
 
     public ProductSku getProductSku() {

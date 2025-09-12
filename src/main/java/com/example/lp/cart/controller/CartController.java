@@ -18,11 +18,9 @@ public class CartController {
         this.cartService = cartService;
     }
 
-    @PostMapping("/cart/product/{productId}/productSku/{productSkuId}")
-    public ResponseEntity<Long> addProduct(Authentication auth, @PathVariable("productId") Long productId,
-                                           @PathVariable("productSkuId") Long productSkuId,
-                                           @RequestBody CartRequest cartRequest) {
-        Long addedProductId = cartService.addProduct(auth, productId, productSkuId, cartRequest);
+    @PostMapping("/cart")
+    public ResponseEntity<Long> addProduct(Authentication auth, @RequestBody CartRequest cartRequest) {
+        Long addedProductId = cartService.addProduct(auth, cartRequest);
         return ResponseEntity.ok(addedProductId);
     }
 
