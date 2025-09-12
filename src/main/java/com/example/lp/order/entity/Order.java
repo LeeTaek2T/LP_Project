@@ -15,11 +15,20 @@ public class Order {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "total_amount")
-    private Long totalAmount;
+    @Column(name = "total_price")
+    private Long totalPrice;
+
+    @Column(name = "dear_name")
+    private String dearName;
+
+    @Column(name = "phone_number")
+    private String phoneNumber;
 
     @Column(name = "address")
     private String address;
+
+    @Column(name = "address_detail")
+    private String addressDetail;
 
     @Column(name = "post_code")
     private String postCode;
@@ -44,33 +53,46 @@ public class Order {
     private TossPayment tossPayment;
 
 
-    public Order(){}
-
-    public Order(Member member, Long totalAmount, String address, String postCode) {
-        this.member = member;
-        this.totalAmount = totalAmount;
+    public Order(Long totalPrice, String dearName, String phoneNumber, String address, String addressDetail,
+                 String postCode, Member member) {
+        this.totalPrice = totalPrice;
+        this.dearName = dearName;
+        this.phoneNumber = phoneNumber;
         this.address = address;
+        this.addressDetail = addressDetail;
         this.postCode = postCode;
         this.createdAt = OffsetDateTime.now();
-        this.state = "결제 중";
+        this.state = "결제 진행 중";
+        this.member = member;
     }
 
-    public Order(Long id,Member member, Long totalAmount, String address, String postCode,
+    public Order(){}
+
+    public Order(Long totalPrice, String address, String postCode, Member member) {
+        this.totalPrice = totalPrice;
+        this.address = address;
+        this.postCode = postCode;
+        this.createdAt = createdAt;
+        this.state = state;
+        this.member = member;
+    }
+
+    public Order(Long id, Member member, Long totalPrice, String address, String postCode,
                  OffsetDateTime createdAt, String state){
         this.id = id;
         this.member = member;
-        this.totalAmount = totalAmount;
+        this.totalPrice = totalPrice;
         this.address = address;
         this.postCode = postCode;
         this.createdAt = createdAt;
         this.state = state;
     }
 
-    public Order(Long id,Member member, Long totalAmount, String address, String postCode,
+    public Order(Long id,Member member, Long totalPrice, String address, String postCode,
                  OffsetDateTime createdAt, String state, String cancelReason){
         this.id = id;
         this.member = member;
-        this.totalAmount = totalAmount;
+        this.totalPrice = totalPrice;
         this.address = address;
         this.postCode = postCode;
         this.createdAt = createdAt;
@@ -88,8 +110,8 @@ public class Order {
         return orderDetailList;
     }
 
-    public Long getTotalAmount() {
-        return totalAmount;
+    public Long getTotalPrice() {
+        return totalPrice;
     }
 
     public String getState() {

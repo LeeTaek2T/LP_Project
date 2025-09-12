@@ -19,6 +19,9 @@ public class OrderDetail {
     @Column(name = "name", nullable = false)
     private String name;
 
+    @Column(name = "product_cover_image_url",nullable = false)
+    private String productCoverImageUrl;
+
     @Column(name = "quantity", nullable = false)
     private Long quantity;
 
@@ -45,10 +48,11 @@ public class OrderDetail {
 
     public OrderDetail() {}
 
-    public OrderDetail(Long price, String name, Long quantity, String size, String color,
+    public OrderDetail(Long price, String name, String productCoverImageUrl ,Long quantity, String size, String color,
                        Member member, ProductSku productSku, Order order) {
         this.price = price;
         this.name = name;
+        this.productCoverImageUrl = productCoverImageUrl;
         this.quantity = quantity;
         this.size = size;
         this.color = color;

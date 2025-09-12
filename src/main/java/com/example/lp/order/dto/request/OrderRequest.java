@@ -1,13 +1,12 @@
 package com.example.lp.order.dto.request;
 
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-
 import java.util.List;
 
 public record OrderRequest(
-        Long totalAmount,
         String address,
-        String postCode,
-        List<OrderProduct> orderProductRequestList
-) {}
+        String addressDetail,
+        String postcode,
+        String dearName,
+        String phoneNumber,
+        Long totalPrice,
+        List<OrderProductInfo> orderProductInfoList) {}
