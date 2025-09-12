@@ -126,9 +126,17 @@ public class MemberService {
     public MemberInfoResponse getMemberInfo(Authentication member) {
         Member registerdMember = memberRepository.findByEmail(member.getName())
                 .orElseThrow(() -> new RuntimeException());
-        MemberInfoResponse memberInfoResponse = new MemberInfoResponse(registerdMember.getEmail(),
-                registerdMember.getPhoneNumber(), registerdMember.getPhoneNumber());
+        MemberInfoResponse memberInfoResponse = new MemberInfoResponse(registerdMember.getUserName(),
+                registerdMember.getEmail(), registerdMember.getPhoneNumber(), registerdMember.getAddress(),
+                registerdMember.getAddressDetail(), registerdMember.getPostcode());
         return memberInfoResponse;
+    }
+
+    public void registerMemberHomeAddress(Authentication member) {
+        Member registeredMember = memberRepository.findByEmail(member.getName())
+                .orElseThrow(() -> new RuntimeException());
+        registeredMember.registerHomeAddress(registeredMember.getAddress(),
+                registeredMember.getAddressDetail(), registeredMember.getPostcode());
     }
 
 
@@ -172,4 +180,5 @@ public class MemberService {
                 .build();
         res.addHeader(org.springframework.http.HttpHeaders.SET_COOKIE, cookie.toString());
     }
+
 }

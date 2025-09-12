@@ -72,7 +72,15 @@ public class Member{
         this.phoneNumber = phoneNumber;
         this.role = "ROLE_BUYER";
         this.createdAt = OffsetDateTime.now();
+        this.updatedAt = OffsetDateTime.now();
         this.userName = userName;
+    }
+
+    public void registerHomeAddress(String address,String addressDetail, String postcode){
+        this.address = address;
+        this.addressDetail = addressDetail;
+        this.postcode = postcode;
+        this.updatedAt = OffsetDateTime.now();
     }
 
     public Long getId() {
@@ -89,6 +97,18 @@ public class Member{
 
     public String getRole() {
         return this.role;
+    }
+
+    public String getPostcode() {
+        return postcode;
+    }
+
+    public String getAddressDetail() {
+        return addressDetail;
+    }
+
+    public String getAddress() {
+        return address;
     }
 
     public String getPhoneNumber() {

@@ -57,4 +57,11 @@ public class MemberController {
         MemberInfoResponse memberInfoResponse = memberService.getMemberInfo(member);
         return ResponseEntity.ok(memberInfoResponse);
     }
+
+    @PutMapping("/member/info")
+    public ResponseEntity<Void> registerMemberHomeAddress(Authentication member){
+        memberService.registerMemberHomeAddress(member);
+        return ResponseEntity.ok().build();
+    }
+
 }
