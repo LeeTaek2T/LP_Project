@@ -2,6 +2,7 @@ package com.example.lp.event.entity;
 
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,32 +18,28 @@ public class Event {
     private String name;
 
     @Column(name = "start_at", nullable = false)
-    private LocalDateTime startAt;
+    private OffsetDateTime startAt;
 
     @Column(name = "end_at", nullable = false)
-    private LocalDateTime endAt;
+    private OffsetDateTime endAt;
 
     @Column(name = "state", length = 20, nullable = false)
     private String state;
+
+    @Column(name = "cover_image_url")
+    private String coverImageUrl;
 
     @OneToMany(mappedBy = "event", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<EventItem> eventItemList = new ArrayList<>();
 
     public Event(){}
 
-    public Event(String name, LocalDateTime startAt, LocalDateTime endAt, String state) {
+    public Event(String name, OffsetDateTime startAt, OffsetDateTime endAt, String state, String coverImageUrl) {
         this.name = name;
         this.startAt = startAt;
         this.endAt = endAt;
         this.state = state;
-    }
-
-    public Event(Long id, String name, LocalDateTime startAt, LocalDateTime endAt, String state) {
-        this.id = id;
-        this.name = name;
-        this.startAt = startAt;
-        this.endAt = endAt;
-        this.state = state;
+        this.coverImageUrl = coverImageUrl;
     }
 
     public Long getId() {
@@ -53,15 +50,19 @@ public class Event {
         return name;
     }
 
-    public LocalDateTime getStartAt() {
+    public OffsetDateTime getStartAt() {
         return startAt;
     }
 
-    public LocalDateTime getEndAt() {
+    public OffsetDateTime getEndAt() {
         return endAt;
     }
 
     public String getState() {
         return state;
+    }
+
+    public String getCoverImageUrl() {
+        return coverImageUrl;
     }
 }

@@ -27,7 +27,7 @@ public class EventService {
         return registerdEvent.getId();
     }
 
-    public EventResponse getEvent(Long eventId) {
+    public EventResponse getEventByEventId(Long eventId) {
         Event event = eventRepository.findById(eventId)
                 .orElseThrow(() -> new RuntimeException());
         EventResponse eventResponse = eventMapper.entityToResponse(event);
@@ -47,14 +47,5 @@ public class EventService {
             eventResponseList.add(eventResponse);
         }
         return eventResponseList;
-    }
-
-    public EventResponse updateEvent(Long eventId, EventStateRequest eventStateRequest) {
-        Event event = eventRepository.findById(eventId)
-                .orElseThrow(() -> new RuntimeException());
-        Event newEvent = new Event(event.getId(), event.getName(), event.getStartAt(), event.getEndAt(), eventStateRequest.state());
-        Event updateEvent = eventRepository.save(newEvent);
-        EventResponse eventResponse = eventMapper.entityToResponse(updateEvent);
-        return eventResponse;
     }
 }

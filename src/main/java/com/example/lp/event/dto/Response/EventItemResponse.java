@@ -1,8 +1,19 @@
 package com.example.lp.event.dto.Response;
 
-public record EventItemResponse(Long eventItemId,
-                                Long productSkuId,
+import com.example.lp.product.dto.response.ProductSkuResponse;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import lombok.Builder;
+
+import java.util.List;
+
+
+@JsonInclude(JsonInclude.Include.NON_NULL)
+@Builder
+public record EventItemResponse(Long productId,
+                                String name,
+                                Long price,
+                                String coveImageUrl,
+                                Long eventItemId,
                                 Long salePrice,
-                                Long quotaPerUser,
-                                Long stock) {
+                                List<ProductSkuResponse> productSkuResponseList) {
 }

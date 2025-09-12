@@ -18,7 +18,8 @@ public class EventController {
         this.eventService = eventService;
     }
 
-    @PostMapping("/event")
+    //이벤트 등록
+    @PostMapping("/seller/event")
     public ResponseEntity<URI> registerEvent(@RequestBody EventRequest eventRequest){
         Long registeredEventId = eventService.registerEvent(eventRequest);
         URI location = ServletUriComponentsBuilder
@@ -29,25 +30,24 @@ public class EventController {
         return ResponseEntity.created(location).build();
     }
 
+    //모든 이벤트 조회
     @GetMapping("/event")
     public ResponseEntity<List<EventResponse>> getAllEvent(){
         List<EventResponse> eventResponseList = eventService.getAllEvent();
         return ResponseEntity.ok(eventResponseList);
     }
 
-    @GetMapping("/event/{eventId}")
-    public ResponseEntity<EventResponse> getEvent(@PathVariable Long eventId){
-        EventResponse eventResponse = eventService.getEvent(eventId);
-        return ResponseEntity.ok(eventResponse);
+    //판매자를 위한 모든 이벤트 조회
+    @GetMapping("/seller/event")
+    public ResponseEntity<List<EventResponse>> getAllEventForSeller(){
+        List<EventResponse> eventResponseList = eventService.getAllEvent();
+        return ResponseEntity.ok(eventResponseList);
     }
 
-    @PutMapping("/event/{eventId}")
-    public ResponseEntity<EventResponse> updateEvent(@PathVariable Long eventId,
-                                                     @RequestBody EventStateRequest eventStateRequest){
-        EventResponse eventResponse = eventService.updateEvent(eventId, eventStateRequest);
+    //특정이벤트 가져오기
+    @GetMapping("/seller/event/{eventId}")
+    public ResponseEntity<EventResponse> getEventByEventId(@PathVariable Long eventId){
+        EventResponse eventResponse = eventService.getEventByEventId(eventId);
         return ResponseEntity.ok(eventResponse);
     }
-
-
-
 }

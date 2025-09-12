@@ -1,9 +1,11 @@
 package com.example.lp.event.entity;
 
+import com.example.lp.product.entity.Product;
 import com.example.lp.product.entity.ProductSku;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 
 @Entity
 @Table(name = "eventItem")
@@ -13,36 +15,32 @@ public class EventItem {
     @Column(name = "event_item_id")
     Long Id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "event_id", nullable = false)
-    private Event event;
-
     @Column(name = "sale_price", nullable = false)
     Long salePrice;
 
     @Column(name = "quota_per_user", nullable = false)
     Long quotaPerUser;
 
-    @Column(name = "stock", nullable = false)
-    Long stock;
 
     @Column(name = "created_at", nullable = false)
-    LocalDateTime createdAt;
+    OffsetDateTime createdAt;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "product_sku_id", nullable = false)
-    ProductSku productSku;
+    @JoinColumn(name = "event_id", nullable = false)
+    private Event event;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "product_id", nullable = false)
+    Product product;
 
     public EventItem(){}
 
-    public EventItem(Event event, Long salePrice, Long quotaPerUser, Long stock, LocalDateTime createdAt,
-                     ProductSku productSku) {
+    public EventItem(Event event, Long salePrice, Long quotaPerUser, Product product) {
         this.event = event;
         this.salePrice = salePrice;
         this.quotaPerUser = quotaPerUser;
-        this.stock = stock;
-        this.createdAt = createdAt;
-        this.productSku = productSku;
+        this.createdAt = OffsetDateTime.now();
+        this.product = product;
     }
 
     public Long getId() {
@@ -61,15 +59,11 @@ public class EventItem {
         return quotaPerUser;
     }
 
-    public Long getStock() {
-        return stock;
-    }
-
-    public LocalDateTime getCreatedAt() {
+    public OffsetDateTime getCreatedAt() {
         return createdAt;
     }
 
-    public ProductSku getProductSku() {
-        return productSku;
+    public Product getProduct() {
+        return product;
     }
 }

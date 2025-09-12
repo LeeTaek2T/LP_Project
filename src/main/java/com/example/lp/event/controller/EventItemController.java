@@ -1,6 +1,7 @@
 package com.example.lp.event.controller;
 
 import com.example.lp.event.dto.Request.EventItemRequest;
+import com.example.lp.event.dto.Response.EventItemForSellerResponse;
 import com.example.lp.event.dto.Response.EventItemResponse;
 import com.example.lp.event.service.EventItemService;
 import org.springframework.http.ResponseEntity;
@@ -18,7 +19,13 @@ public class EventItemController {
         this.eventItemService = eventItemService;
     }
 
-    @PostMapping("/event/{eventId}/eventItem")
+    @GetMapping("/event/{eventId}/eventItem")
+    public ResponseEntity<List<EventItemResponse>> getAllEventItemByEventId(@PathVariable Long eventId){
+        List<EventItemResponse> eventItemResponseList = eventItemService.getAllEventItemByEventId(eventId);
+        return ResponseEntity.ok(eventItemResponseList);
+    }
+
+    @PostMapping("/seller/event/{eventId}/eventItem")
     public ResponseEntity<URI> registerEventItem(@PathVariable Long eventId,
                                                  @RequestBody EventItemRequest eventItemRequest){
         Long registeredEventItemId = eventItemService.registerEventItem(eventId, eventItemRequest);
@@ -30,15 +37,20 @@ public class EventItemController {
         return ResponseEntity.created(location).build();
     }
 
-    @GetMapping("/event/{eventId}/eventItem")
-    public ResponseEntity<List<EventItemResponse>> getAllEventItem(@PathVariable Long eventId){
-        List<EventItemResponse> eventItemResponseList = eventItemService.getAllEventItem(eventId);
-        return ResponseEntity.ok(eventItemResponseList);
+    @GetMapping("/seller/event/{eventId}/eventItem")
+    public ResponseEntity<List<EventItemForSellerResponse>> getAllEventItemByEventIdForSeller(@PathVariable Long eventId){
+        List<EventItemForSellerResponse> responseList = eventItemService.getAllEventItemByEventIdForSeller(eventId);
+        return ResponseEntity.ok(responseList);
     }
 
     @GetMapping("/eventItem/{eventItemId}")
-    public ResponseEntity<EventItemResponse> getEventItem(@PathVariable Long eventItemId){
-        EventItemResponse eventItemResponse = eventItemService.getEventItem(eventItemId);
+    public ResponseEntity<EventItemResponse> getEventItemByEventItemId(@PathVariable Long eventItemId){
+        EventItemResponse eventItemResponse = eventItemService.getEventItemByEventItemId(eventItemId);
         return ResponseEntity.ok(eventItemResponse);
     }
-}
+
+    @GetMapping("seller/eventItem/{eventItemId}")
+    public ResponseEntity<EventItemForSellerResponse> getEventItemByEventItemIdForSeller(@PathVariable Long eventItemId){
+        EventItemForSellerResponse eventItemForSellerResponse = eventItemService.getEventItemByEventItemIdForSeller(eventItemId);
+        return ResponseEntity.ok(eventItemForSellerResponse);
+    }}
