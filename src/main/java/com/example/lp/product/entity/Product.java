@@ -42,6 +42,15 @@ public class Product {
 
     public Product(){}
 
+    public Product(String name, Long price, String coverImageUrl, String category) {
+        this.name = name;
+        this.price = price;
+        this.coverImageUrl = coverImageUrl;
+        this.category = category;
+        this.createdAt = OffsetDateTime.now();
+        this.isSaled = false;
+    }
+
     public Product(String name, OffsetDateTime createdAt) {
         this.name = name;
         this.createdAt = createdAt;
@@ -53,5 +62,25 @@ public class Product {
 
     public String getName() {
         return name;
+    }
+
+    public Long getPrice() {
+        return price;
+    }
+
+    public String getCoverImageUrl() {
+        return coverImageUrl;
+    }
+
+    public String getCategory() {
+        return category;
+    }
+
+    public Boolean getSaled() {
+        return isSaled;
+    }
+
+    public void changeOnIsSaled() {
+        this.isSaled = true;
     }
 }

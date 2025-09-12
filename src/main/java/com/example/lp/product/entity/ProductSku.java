@@ -17,7 +17,7 @@ public class ProductSku {
     @Column(name = "product_sku_id")
     private Long id;
 
-    @Column(name = "sku_code", length = 100, nullable = false)
+    @Column(name = "sku_code", length = 100)
     private String productSkuCode;
 
     @Column(name = "color", length = 5, nullable = false)
@@ -52,6 +52,16 @@ public class ProductSku {
     private List<ProductSkuImage> productSkuImagesList;
 
     public ProductSku(){}
+
+    public ProductSku(String color, String size, Long quantity, Product product) {
+        this.color = color;
+        this.size = size;
+        this.quantity = quantity;
+        this.state = "재고 있음";
+        this.createdAt = OffsetDateTime.now();
+        this.updatedAt = OffsetDateTime.now();
+        this.product = product;
+    }
 
     public ProductSku(Product product, String productSkuCode, String color, String size, Long quantity,
                       OffsetDateTime createdAt, OffsetDateTime updatedAt){

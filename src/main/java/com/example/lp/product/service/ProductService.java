@@ -1,8 +1,10 @@
 package com.example.lp.product.service;
 
-import com.example.lp.product.Mapper.ProductMapper;
-import com.example.lp.product.dto.request.ProductRequest;
-import com.example.lp.product.dto.response.ProductResponse;
+import com.example.lp.event.entity.EventItem;
+import com.example.lp.event.repository.EventItemRepository;
+import com.example.lp.product.dto.request.ProductForRegisterationRequest;
+import com.example.lp.product.dto.response.ProductAndSkuResponse;
+import com.example.lp.product.dto.response.ProductSkuResponse;
 import com.example.lp.product.entity.Product;
 import com.example.lp.product.repository.ProductRepository;
 import org.springframework.stereotype.Service;
@@ -13,39 +15,87 @@ import java.util.List;
 @Service
 public class ProductService {
     private final ProductRepository productRepository;
-    private final ProductMapper productMapper;
+    private final ProductSkuService productSkuService;
+    private final EventItemRepository eventItemRepository;
 
     public ProductService(ProductRepository productRepository,
-                          ProductMapper productMapper){
-        this.productRepository=productRepository;
-        this.productMapper=productMapper;
+                          ProductSkuService productSkuService, EventItemRepository eventItemRepository) {
+        this.productRepository = productRepository;
+        this.productSkuService = productSkuService;
+        this.eventItemRepository = eventItemRepository;
     }
 
-    public Long registerProduct(ProductRequest productRequest){
-        Product product = productMapper.requestToEntity(productRequest);
+    public void registerProductAndSku(ProductForRegisterationRequest request) {
+        Product product = new Product(request.name(), request.price(), request.coverImageUrl(), request.category());
         Product savedProduct = productRepository.save(product);
-        return savedProduct.getId();
+
+        List<Long> productSkuIds = productSkuService.registerProductSkus(request.productSkuForRegisterationRequest(), savedProduct);
     }
 
-    public List<ProductResponse> getAllProduct() {
+    public List<ProductAndSkuResponse> getAllProduct() {
         List<Product> productList = productRepository.findAll();
-        List<ProductResponse> productRequestList = convertToProductResponseList(productList);
-        return productRequestList;
+        List<ProductAndSkuResponse> productAndSkuResponseList = convertToProductAndSkuResponseList(productList);
+        return productAndSkuResponseList;
     }
 
-    private List<ProductResponse> convertToProductResponseList(List<Product> productList){
-        List<ProductResponse> productResponseList = new ArrayList<>();
+    private List<ProductAndSkuResponse> convertToProductAndSkuResponseList(List<Product> productList){
+        List<ProductAndSkuResponse> productAndSkuResponseList = new ArrayList<>();
         for(Product product : productList){
-            ProductResponse productResponse = productMapper.entityToResponse(product);
-            productResponseList.add(productResponse);
+            List<ProductSkuResponse> productSkuResponseList = productSkuService.convertToProductSkuResponseList(product);
+            ProductAndSkuResponse productAndSkuResponse = confirmProductEventItem(product, productSkuResponseList);
+            productAndSkuResponseList.add(productAndSkuResponse);
         }
-        return productResponseList;
+        return productAndSkuResponseList;
     }
 
-    public ProductResponse getProductById(Long productId) {
+    private ProductAndSkuResponse confirmProductEventItem(Product product, List<ProductSkuResponse> productSkuResponseList){
+        if (product.getSaled()){
+            EventItem eventItem = eventItemRepository.findByProduct(product)
+                    .orElseThrow(() -> new RuntimeException());
+            return new ProductAndSkuResponse(product.getId(), product.getName(), product.getPrice(), product.getCategory(),
+                    product.getCoverImageUrl(), product.getSaled(), eventItem.getSalePrice(), productSkuResponseList);
+        }
+        return new ProductAndSkuResponse(product.getId(), product.getName(), product.getPrice(), product.getCategory(),
+                product.getCoverImageUrl(), product.getSaled(), null, productSkuResponseList);
+    }
+
+    public List<ProductAndSkuResponse> getAllProductForSeller() {
+        List<Product> productList = productRepository.findAll();
+        List<ProductAndSkuResponse> productAndSkuResponseList = convertToProductAndSkuResponseListForSeller(productList);
+        return productAndSkuResponseList;
+    }
+
+    private List<ProductAndSkuResponse> convertToProductAndSkuResponseListForSeller(List<Product> productList){
+        List<ProductAndSkuResponse> productAndSkuResponseList = new ArrayList<>();
+        for(Product product : productList){
+            List<ProductSkuResponse> productSkuResponseList = productSkuService.convertToProductSkuResponseListForSeller(product);
+            ProductAndSkuResponse productAndSkuResponse = confirmProductEventItem(product, productSkuResponseList);
+            productAndSkuResponseList.add(productAndSkuResponse);
+        }
+        return productAndSkuResponseList;
+    }
+
+    public ProductAndSkuResponse getProductAndSkuByProductId(Long productId) {
         Product product = productRepository.findById(productId)
                 .orElseThrow(() -> new RuntimeException());
-        ProductResponse productResponse = productMapper.entityToResponse(product);
-        return productResponse;
+        ProductAndSkuResponse productAndSkuResponse = convertToProductAndSkuResponse(product);
+        return productAndSkuResponse;
+    }
+
+    public ProductAndSkuResponse convertToProductAndSkuResponse(Product product){
+        List<ProductSkuResponse> productSkuResponseList = productSkuService.convertToProductSkuResponseListForIndividualProduct(product);
+        ProductAndSkuResponse productAndSkuResponse = confirmProductEventItemForSearchByProductId(product, productSkuResponseList);
+        return productAndSkuResponse;
+    }
+
+    private ProductAndSkuResponse confirmProductEventItemForSearchByProductId(Product product, List<ProductSkuResponse> productSkuResponseList){
+        if (product.getSaled()){
+            EventItem eventItem = eventItemRepository.findByProduct(product)
+                    .orElseThrow(() -> new RuntimeException());
+            return new ProductAndSkuResponse(null, product.getName(), product.getPrice(), null,
+                    null, product.getSaled(), eventItem.getSalePrice(), productSkuResponseList);
+        }
+        return new ProductAndSkuResponse(null, product.getName(), product.getPrice(), null,
+                product.getCoverImageUrl(), product.getSaled(), null, productSkuResponseList);
     }
 }
