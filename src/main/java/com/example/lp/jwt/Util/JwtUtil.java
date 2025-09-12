@@ -34,7 +34,7 @@ public class JwtUtil {
         Date now = new Date();
         return Jwts.builder()
                 .setSubject(userEmail)
-                .claim("role", role)
+                .claim("ROLE_", role)
                 .setIssuer(issuer)
                 .setIssuedAt(now)
                 .setExpiration(new Date(now.getTime() + accessExpMs))
@@ -64,24 +64,12 @@ public class JwtUtil {
                 .getPayload();              // = Claims
     }
 
-    // 토큰 생성 메서드
-    public String createJwt(String loginEmailId, String role, Long expiredMs) {
-
-        return Jwts.builder()
-                .claim("loginEmailId", loginEmailId)
-                .claim("role", role)
-                .issuedAt(new Date(System.currentTimeMillis()))
-                .expiration(new Date(System.currentTimeMillis() + expiredMs))
-                .signWith(secretKey)
-                .compact();
-    }
-
     // ★ 여기만 쓰세요
     public String getEmail(String token){
         return jwtParser.parseSignedClaims(token).getPayload().getSubject();
     }
     public String getRole(String token){
-        return jwtParser.parseSignedClaims(token).getPayload().get("role", String.class);
+        return jwtParser.parseSignedClaims(token).getPayload().get("ROLE_", String.class);
     }
     public String getJti(String token){
         return jwtParser.parseSignedClaims(token).getPayload().getId();
