@@ -1,6 +1,10 @@
 package com.example.lp.tosspayment.dto.response;
 
-public record ConfirmResponse(String orderId,
-                              String paymentKey,
-                              Long amount) {
+import java.time.OffsetDateTime;
+
+public record ConfirmResponse(String tossOrderId,
+                              String tossPaymentKey,
+                              Long amount,
+                              String status,
+                              OffsetDateTime approvedAt) {
 }

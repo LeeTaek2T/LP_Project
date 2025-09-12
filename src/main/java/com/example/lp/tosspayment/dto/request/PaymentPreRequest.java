@@ -1,4 +1,4 @@
 package com.example.lp.tosspayment.dto.request;
 
-public record PaymentPreRequest(String orderId,
+public record PaymentPreRequest(String tossOrderId,
                                 Long totalAmount){}

@@ -1,6 +1,6 @@
 package com.example.lp.tosspayment.dto.request;
 
-public record ConfirmRequest(String paymentKey,
-                             String orderId,
+public record ConfirmRequest(String tossPaymentKey,
+                             String tossOrderId,
                              Long amount) {
 }

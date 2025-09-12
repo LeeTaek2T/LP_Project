@@ -1,7 +1,7 @@
 package com.example.lp.tosspayment.dto.response;
 
 public record PaymentPreResponse(Long paymentId,
-                                 String orderId,
+                                 String tossOrderId,
                                  Long totalAmount,
-                                 Long dbOrderId){
+                                 Long orderId){
 }

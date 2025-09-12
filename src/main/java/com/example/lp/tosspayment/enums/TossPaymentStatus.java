@@ -1,4 +1,4 @@
-package com.example.lp.order.enums;
+package com.example.lp.tosspayment.enums;
 
 // 결제상태 (Toss 기준)
 public enum TossPaymentStatus {
