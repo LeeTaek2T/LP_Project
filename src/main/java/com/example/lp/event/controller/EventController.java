@@ -6,6 +6,7 @@ import com.example.lp.event.dto.Response.EventResponse;
 import com.example.lp.event.service.EventService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import java.util.List;
 import java.net.URI;
@@ -20,8 +21,9 @@ public class EventController {
 
     //이벤트 등록
     @PostMapping("/seller/event")
-    public ResponseEntity<URI> registerEvent(@RequestBody EventRequest eventRequest){
-        Long registeredEventId = eventService.registerEvent(eventRequest);
+    public ResponseEntity<URI> registerEvent(@RequestPart EventRequest eventRequest,
+                                             @RequestPart MultipartFile coverImage){
+        Long registeredEventId = eventService.registerEvent(eventRequest, coverImage);
         URI location = ServletUriComponentsBuilder
                 .fromCurrentRequestUri()
                 .path("/{id}")

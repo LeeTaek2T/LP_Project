@@ -1,12 +1,16 @@
 package com.example.lp.product.service;
 
+import com.example.lp.handler.ImageHandler;
 import com.example.lp.product.dto.request.ProductSkuForRegisterationRequest;
+import com.example.lp.product.dto.request.ProductSkuRequest;
 import com.example.lp.product.dto.response.ProductSkuResponse;
 import com.example.lp.product.entity.Product;
 import com.example.lp.product.entity.ProductSku;
 import com.example.lp.product.repository.ProductRepository;
 import com.example.lp.product.repository.ProductSkuRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+
 import java.util.*;
 
 @Service
@@ -14,11 +18,16 @@ public class ProductSkuService {
 
     private final ProductSkuRepository productSkuRepository;
     private final ProductSkuImageService productSkuImageService;
+    private final ProductRepository productRepository;
+    private final ImageHandler imageHandler;
 
     public ProductSkuService(ProductSkuRepository productSkuRepository,
-                             ProductSkuImageService productSkuImageService) {
+                             ProductSkuImageService productSkuImageService, ProductRepository productRepository,
+                             ImageHandler imageHandler) {
         this.productSkuRepository = productSkuRepository;
         this.productSkuImageService = productSkuImageService;
+        this.productRepository = productRepository;
+        this.imageHandler = imageHandler;
     }
 
     public List<ProductSkuResponse> convertToProductSkuResponseList(Product product){
@@ -68,18 +77,20 @@ public class ProductSkuService {
         productSku.plusAmount(amount);
     }
 
-    public List<Long> registerProductSkus(List<ProductSkuForRegisterationRequest> requests, Product product) {
-        List<Long> productSkuIdList = new ArrayList<>();
-        for (ProductSkuForRegisterationRequest request : requests) {
-            ProductSku productSku = new ProductSku(request.color(), request.size(),
-                    request.quantity(), product);
-            ProductSku savedProductSku = productSkuRepository.save(productSku);
+    public void registerProductSku(Long productId, ProductSkuRequest productSkuRequest,
+                                         List<MultipartFile> productSkuImageList) {
+        Product product = productRepository.findById(productId)
+                .orElseThrow(() -> new RuntimeException(""));
 
-            //sku이미지 생성
-            productSkuImageService.registerProductSkuImages(request.productSkuImageUrlList(), savedProductSku);
-            productSkuIdList.add(savedProductSku.getId());
+        ProductSku productSku = new ProductSku(productSkuRequest.color(), productSkuRequest.size(),
+                productSkuRequest.quantity(), product);
+        ProductSku savedProductSku = productSkuRepository.save(productSku);
+
+        //sku이미지 생성
+        for (MultipartFile productSkuImage : productSkuImageList) {
+            String productSkuImageUrl = imageHandler.saveSkuImage(product.getName(), productSkuImage);
+            productSkuImageService.registerProductSkuImages(productSkuImageUrl, savedProductSku);
         }
-        return productSkuIdList;
     }
 
     public List<ProductSkuResponse> convertToProductSkuResponseListForIndividualProduct(Product product) {

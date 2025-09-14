@@ -33,6 +33,7 @@ public class OrderService {
         this.orderDetailRepository = orderDetailRepository;
     }
 
+    @Transactional
     public Long createOrder(Authentication auth, OrderRequest orderRequest) {
         Member member = memberRepository.findByEmail(auth.getName())
                 .orElseThrow(()-> new RuntimeException());

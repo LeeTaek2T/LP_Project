@@ -16,11 +16,9 @@ public class ProductSkuImageService {
         this.productSkuImageRepository = productSkuImageRepository;
     }
 
-    public void registerProductSkuImages(List<String> productSkuImageUrlList, ProductSku productSku) {
-        for (String productSkuImageUrl : productSkuImageUrlList) {
-            ProductSkuImage productSkuImage = new ProductSkuImage(productSkuImageUrl, productSku);
-            productSkuImageRepository.save(productSkuImage);
-        }
+    public void registerProductSkuImages(String productSkuImageUrl, ProductSku productSku) {
+        ProductSkuImage productSkuImage = new ProductSkuImage(productSkuImageUrl, productSku);
+        productSkuImageRepository.save(productSkuImage);
     }
 
     public List<String> getAllProductSkuImageUrl(ProductSku productSku) {

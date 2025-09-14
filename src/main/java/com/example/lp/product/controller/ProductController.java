@@ -1,10 +1,14 @@
 package com.example.lp.product.controller;
 
 import com.example.lp.product.dto.request.ProductForRegisterationRequest;
+import com.example.lp.product.dto.request.ProductRequest;
+import com.example.lp.product.dto.request.ProductSkuRequest;
 import com.example.lp.product.dto.response.ProductAndSkuResponse;
 import com.example.lp.product.service.ProductService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
 import java.util.List;
 
 @RestController
@@ -16,10 +20,11 @@ public class ProductController {
     }
 
     @PostMapping("/seller/product")
-    public ResponseEntity<Void> registerProductAndSku(@RequestBody ProductForRegisterationRequest productForRegisterationRequest){
-        productService.registerProductAndSku(productForRegisterationRequest);
+    public ResponseEntity<Void> registerProduct(@RequestPart ProductRequest productRequest, @RequestPart MultipartFile coverImage){
+        productService.registerProduct(productRequest, coverImage);
         return ResponseEntity.ok().build();
     }
+
 
     @GetMapping("/product")
     public ResponseEntity<List<ProductAndSkuResponse>> getAllProduct(){

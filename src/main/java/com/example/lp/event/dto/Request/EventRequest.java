@@ -3,5 +3,4 @@ import java.time.OffsetDateTime;
 
 public record EventRequest(String name,
                            OffsetDateTime startAt,
-                           OffsetDateTime endAt,
-                           String coverImageUrl) {}
+                           OffsetDateTime endAt) {}

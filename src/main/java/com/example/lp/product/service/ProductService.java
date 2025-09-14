@@ -2,13 +2,18 @@ package com.example.lp.product.service;
 
 import com.example.lp.event.entity.EventItem;
 import com.example.lp.event.repository.EventItemRepository;
+import com.example.lp.handler.ImageHandler;
 import com.example.lp.product.dto.request.ProductForRegisterationRequest;
+import com.example.lp.product.dto.request.ProductRequest;
+import com.example.lp.product.dto.request.ProductSkuRequest;
 import com.example.lp.product.dto.response.ProductAndSkuResponse;
 import com.example.lp.product.dto.response.ProductSkuResponse;
 import com.example.lp.product.entity.Product;
 import com.example.lp.product.repository.ProductRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,19 +22,22 @@ public class ProductService {
     private final ProductRepository productRepository;
     private final ProductSkuService productSkuService;
     private final EventItemRepository eventItemRepository;
+    private final ImageHandler imageHandler;
 
     public ProductService(ProductRepository productRepository,
-                          ProductSkuService productSkuService, EventItemRepository eventItemRepository) {
+                          ProductSkuService productSkuService, EventItemRepository eventItemRepository,
+                          ImageHandler imageHandler) {
         this.productRepository = productRepository;
         this.productSkuService = productSkuService;
         this.eventItemRepository = eventItemRepository;
+        this.imageHandler = imageHandler;
     }
 
-    public void registerProductAndSku(ProductForRegisterationRequest request) {
-        Product product = new Product(request.name(), request.price(), request.coverImageUrl(), request.category());
-        Product savedProduct = productRepository.save(product);
+    public void registerProduct(ProductRequest productRequest, MultipartFile coverImage) {
 
-        List<Long> productSkuIds = productSkuService.registerProductSkus(request.productSkuForRegisterationRequest(), savedProduct);
+        String savedCoverImageUrl = imageHandler.saveProductImage(productRequest.name(), coverImage);
+        Product product = new Product(productRequest.name(), productRequest.price(), savedCoverImageUrl, productRequest.category());
+        Product savedProduct = productRepository.save(product);
     }
 
     public List<ProductAndSkuResponse> getAllProduct() {

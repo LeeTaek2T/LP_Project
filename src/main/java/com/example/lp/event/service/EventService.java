@@ -6,7 +6,9 @@ import com.example.lp.event.dto.Response.EventResponse;
 import com.example.lp.event.entity.Event;
 import com.example.lp.event.mapper.EventMapper;
 import com.example.lp.event.repository.EventRepository;
+import com.example.lp.handler.ImageHandler;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,14 +17,18 @@ import java.util.List;
 public class EventService {
     private final EventRepository eventRepository;
     private final EventMapper eventMapper;
+    private final ImageHandler imageHandler;
 
-    public EventService(EventRepository eventRepository, EventMapper eventMapper){
+    public EventService(EventRepository eventRepository, EventMapper eventMapper,
+                        ImageHandler imageHandler) {
         this.eventRepository = eventRepository;
         this.eventMapper = eventMapper;
+        this.imageHandler = imageHandler;
     }
 
-    public Long registerEvent(EventRequest eventRequest){
-        Event event = eventMapper.requestToEntity(eventRequest);
+    public Long registerEvent(EventRequest eventRequest, MultipartFile coverImage){
+        String savedCoverImageUrl = imageHandler.saveEventImage(eventRequest.name(), coverImage);
+        Event event = eventMapper.requestToEntity(eventRequest, savedCoverImageUrl);
         Event registerdEvent = eventRepository.save(event);
         return registerdEvent.getId();
     }

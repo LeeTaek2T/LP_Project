@@ -11,7 +11,7 @@ import java.time.ZoneId;
 @Component
 public class EventMapper {
 
-    public Event requestToEntity(EventRequest eventRequest){
+    public Event requestToEntity(EventRequest eventRequest, String coverImageUrl){
         OffsetDateTime now   = OffsetDateTime.now(ZoneId.of("Asia/Seoul"));
         OffsetDateTime start = eventRequest.startAt();
         OffsetDateTime end   = eventRequest.endAt();
@@ -24,8 +24,7 @@ public class EventMapper {
             currentState = "진행종료";
         }
 
-        return new Event(eventRequest.name(), eventRequest.startAt(), eventRequest.endAt(), currentState,
-                eventRequest.coverImageUrl());
+        return new Event(eventRequest.name(), eventRequest.startAt(), eventRequest.endAt(), currentState, coverImageUrl);
     }
 
     public EventResponse entityToResponse(Event event){
