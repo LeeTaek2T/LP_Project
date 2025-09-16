@@ -32,8 +32,8 @@ public class TossPayment {
     @Column(name = "approved_at")
     private OffsetDateTime approvedAt;
 
-    @Column(name = "total_amount")
-    private Long totalAmount;
+    @Column(name = "total_price")
+    private Long totalPrice;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "order_id")
@@ -43,14 +43,14 @@ public class TossPayment {
 
     public TossPayment(String tossOrderId, Long totalAmount, OffsetDateTime reqeustedAt, Order order){
         this.tossOrderId = tossOrderId;
-        this.totalAmount = totalAmount;
+        this.totalPrice = totalPrice;
         this.reqeustedAt = reqeustedAt;
         this.order = order;
     }
 
     public TossPayment(Long id, String tossOrderId, String tossPaymentKey, String tossPaymentMethod,
                        String tossPaymentStatus, OffsetDateTime reqeustedAt,
-                       OffsetDateTime approvedAt, Long totalAmount, Order order) {
+                       OffsetDateTime approvedAt, Long totalPrice, Order order) {
         this.id = id;
         this.tossOrderId = tossOrderId;
         this.tossPaymentKey = tossPaymentKey;
@@ -58,7 +58,7 @@ public class TossPayment {
         this.tossPaymentStatus = tossPaymentStatus;
         this.reqeustedAt = reqeustedAt;
         this.approvedAt = approvedAt;
-        this.totalAmount = totalAmount;
+        this.totalPrice = totalPrice;
         this.order = order;
     }
 
@@ -74,8 +74,8 @@ public class TossPayment {
         return tossOrderId;
     }
 
-    public Long getTotalAmount() {
-        return totalAmount;
+    public Long getTotalPrice() {
+        return totalPrice;
     }
 
     public String getTossPaymentMethod() {

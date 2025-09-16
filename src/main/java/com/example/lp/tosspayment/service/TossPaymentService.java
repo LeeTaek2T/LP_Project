@@ -41,7 +41,7 @@ public class TossPaymentService {
                 paymentPreRequest.totalAmount(), requestedAt, order);
         TossPayment savedTossPayMent = tossPaymentRepository.save(tossPayment);
         PaymentPreResponse paymentPreResponse = new PaymentPreResponse(savedTossPayMent.getId(),
-                tossPayment.getTossOrderId(), tossPayment.getTotalAmount(), savedTossPayMent.getOrder().getId());
+                tossPayment.getTossOrderId(), tossPayment.getTotalPrice(), savedTossPayMent.getOrder().getId());
         return paymentPreResponse;
     }
 
@@ -55,7 +55,7 @@ public class TossPaymentService {
                 preTossPayment.getOrder());
         TossPayment savedTossPayment = tossPaymentRepository.save(newTossPayment);
         ConfirmResponse confirmResponse = new ConfirmResponse(savedTossPayment.getTossOrderId(),
-                savedTossPayment.getTossPaymentKey(), savedTossPayment.getTotalAmount(),
+                savedTossPayment.getTossPaymentKey(), savedTossPayment.getTotalPrice(),
                 savedTossPayment.getTossPaymentStatus(), savedTossPayment.getApprovedAt());
 
         //결제 상태 변경 : 결제 중 -> 결제 완료
@@ -76,7 +76,7 @@ public class TossPaymentService {
                 .orElseThrow(() -> new RuntimeException("<UNK>"));
         PaymentResponse paymentResponse = new PaymentResponse(tossPayment.getId(), tossPayment.getTossOrderId(),
                 tossPayment.getTossPaymentKey(), tossPayment.getTossPaymentMethod(), tossPayment.getTossPaymentStatus(),
-                tossPayment.getReqeustedAt(), tossPayment.getApprovedAt(), tossPayment.getTotalAmount(),
+                tossPayment.getReqeustedAt(), tossPayment.getApprovedAt(), tossPayment.getTotalPrice(),
                 tossPayment.getOrder().getId());
         return paymentResponse;
     }
@@ -88,7 +88,7 @@ public class TossPaymentService {
         tossPayment.changeStatus(tossPaymentCancelResponse.status());
         PaymentCancelResponse paymentCancelResponse = new PaymentCancelResponse(tossPayment.getTossPaymentMethod(),
                 tossPayment.getTossOrderId(), tossPayment.getTossPaymentStatus(),
-                tossPayment.getTotalAmount());
+                tossPayment.getTotalPrice());
 
         //결제 취소 -> 해당 주문 상태 변경(취소)
         Order order = tossPayment.getOrder();
