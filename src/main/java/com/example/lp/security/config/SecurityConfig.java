@@ -56,6 +56,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/event/**","/api/eventItem/**").permitAll()
                         .requestMatchers("/api/order/*/toss/paymentPre").permitAll()
                         .requestMatchers("/api/toss/**").permitAll()
+                        .requestMatchers("/actuator/**").permitAll()
                         .requestMatchers("/api/seller/**").hasRole("SELLER")
                         .anyRequest().authenticated()
                 );
