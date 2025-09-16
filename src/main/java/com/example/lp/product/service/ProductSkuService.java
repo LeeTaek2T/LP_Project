@@ -1,7 +1,6 @@
 package com.example.lp.product.service;
 
-import com.example.lp.handler.ImageHandler;
-import com.example.lp.product.dto.request.ProductSkuForRegisterationRequest;
+import com.example.lp.security.handler.ImageHandler;
 import com.example.lp.product.dto.request.ProductSkuRequest;
 import com.example.lp.product.dto.response.ProductSkuResponse;
 import com.example.lp.product.entity.Product;

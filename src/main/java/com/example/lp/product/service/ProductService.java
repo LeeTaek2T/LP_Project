@@ -2,10 +2,8 @@ package com.example.lp.product.service;
 
 import com.example.lp.event.entity.EventItem;
 import com.example.lp.event.repository.EventItemRepository;
-import com.example.lp.handler.ImageHandler;
-import com.example.lp.product.dto.request.ProductForRegisterationRequest;
+import com.example.lp.security.handler.ImageHandler;
 import com.example.lp.product.dto.request.ProductRequest;
-import com.example.lp.product.dto.request.ProductSkuRequest;
 import com.example.lp.product.dto.response.ProductAndSkuResponse;
 import com.example.lp.product.dto.response.ProductSkuResponse;
 import com.example.lp.product.entity.Product;
@@ -17,7 +15,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 

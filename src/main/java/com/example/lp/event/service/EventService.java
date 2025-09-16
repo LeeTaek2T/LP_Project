@@ -1,12 +1,11 @@
 package com.example.lp.event.service;
 
 import com.example.lp.event.dto.Request.EventRequest;
-import com.example.lp.event.dto.Request.EventStateRequest;
 import com.example.lp.event.dto.Response.EventResponse;
 import com.example.lp.event.entity.Event;
 import com.example.lp.event.mapper.EventMapper;
 import com.example.lp.event.repository.EventRepository;
-import com.example.lp.handler.ImageHandler;
+import com.example.lp.security.handler.ImageHandler;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
