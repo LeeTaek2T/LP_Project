@@ -18,6 +18,10 @@ bin/
 !**/src/test/**/bin/
 
 ### IntelliJ IDEA ###
+**/application-jwt.properties
+**/application.properties
+**/application-toss.properties
+**/application-image.properties
 .idea
 *.iws
 *.iml
