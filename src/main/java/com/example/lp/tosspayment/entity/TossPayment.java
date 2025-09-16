@@ -35,7 +35,7 @@ public class TossPayment {
     @Column(name = "total_amount")
     private Long totalAmount;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "order_id")
     private Order order;
 

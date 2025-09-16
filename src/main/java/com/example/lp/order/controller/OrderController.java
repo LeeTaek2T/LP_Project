@@ -3,8 +3,6 @@ package com.example.lp.order.controller;
 import com.example.lp.order.dto.request.OrderCancelRequest;
 import com.example.lp.order.dto.request.OrderRequest;
 import com.example.lp.order.dto.response.OrderCancelPendingResponse;
-import com.example.lp.order.dto.response.OrderCancelResponse;
-import com.example.lp.order.dto.response.OrderDetailResponse;
 import com.example.lp.order.service.OrderService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;

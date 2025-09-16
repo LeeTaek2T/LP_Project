@@ -49,8 +49,8 @@ public class Order {
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<OrderDetail> orderDetailList;
 
-    @OneToOne(fetch = FetchType.LAZY, mappedBy = "order")
-    private TossPayment tossPayment;
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<TossPayment> tossPaymentList;
 
 
     public Order(Long totalPrice, String dearName, String phoneNumber, String address, String addressDetail,
@@ -116,10 +116,6 @@ public class Order {
 
     public String getState() {
         return state;
-    }
-
-    public TossPayment getTossPayment() {
-        return tossPayment;
     }
 
     public String getAddress() {
