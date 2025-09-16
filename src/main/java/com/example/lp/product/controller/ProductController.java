@@ -27,8 +27,9 @@ public class ProductController {
 
 
     @GetMapping("/product")
-    public ResponseEntity<List<ProductAndSkuResponse>> getAllProduct(){
-        List<ProductAndSkuResponse> productResponseList = productService.getAllProduct();
+    public ResponseEntity<List<ProductAndSkuResponse>> getAllProduct(@RequestParam(defaultValue = "0") int page,
+                                                                     @RequestParam(defaultValue = "10") int size){
+        List<ProductAndSkuResponse> productResponseList = productService.getAllProduct(page,size);
         return ResponseEntity.ok(productResponseList);
     }
 

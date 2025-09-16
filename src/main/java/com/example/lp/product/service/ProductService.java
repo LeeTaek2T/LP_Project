@@ -10,6 +10,10 @@ import com.example.lp.product.dto.response.ProductAndSkuResponse;
 import com.example.lp.product.dto.response.ProductSkuResponse;
 import com.example.lp.product.entity.Product;
 import com.example.lp.product.repository.ProductRepository;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -40,10 +44,15 @@ public class ProductService {
         Product savedProduct = productRepository.save(product);
     }
 
-    public List<ProductAndSkuResponse> getAllProduct() {
-        List<Product> productList = productRepository.findAll();
-        List<ProductAndSkuResponse> productAndSkuResponseList = convertToProductAndSkuResponseList(productList);
-        return productAndSkuResponseList;
+    @Cacheable(
+            value = "prod:list",
+            key = "'v1:p=' + #page + ':s=' + #size",
+            sync = true
+    )
+    public List<ProductAndSkuResponse> getAllProduct(int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Product> productPage = productRepository.findAll(pageable);
+        return convertToProductAndSkuResponseList(productPage.getContent());
     }
 
     private List<ProductAndSkuResponse> convertToProductAndSkuResponseList(List<Product> productList){
