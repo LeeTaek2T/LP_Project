@@ -34,6 +34,8 @@ public class TossPaymentController {
     public ResponseEntity<ConfirmResponse> confirm(@RequestBody ConfirmRequest confirmRequest) {
         String url = tossConfig.getBaseUrl() + "/v1/payments/confirm";
 
+        tossPaymentService.checkOrder(confirmRequest);
+
         TossConfirmRequest tossConfirmRequest = new TossConfirmRequest(confirmRequest.tossPaymentKey(),
                 confirmRequest.tossOrderId(), confirmRequest.amount());
         ResponseEntity<TossConfirmResponse> res = tossRestTemplate.postForEntity(url, tossConfirmRequest,
@@ -64,7 +66,8 @@ public class TossPaymentController {
         TossPaymentCancelResponse tossPaymentCancelResponse = new TossPaymentCancelResponse(base.orderId(),
                 base.status());
 
-        PaymentCancelResponse paymentCancelResponse = tossPaymentService.cancelPayment(tossPaymentCancelResponse);
+        PaymentCancelResponse paymentCancelResponse = tossPaymentService.cancelPayment(tossPaymentCancelResponse,
+                paymentCancelRequest.orderId(), paymentCancelRequest.orderDetailId());
         return ResponseEntity.ok(paymentCancelResponse);
     }
 

@@ -21,6 +21,7 @@ public class OrderController {
         this.orderService = orderService;
     }
 
+    //배송지 정보 입력하며 주문
     @PostMapping("/order")
     public ResponseEntity<URI> createOrder(Authentication auth, @RequestBody OrderRequest orderRequest) {
         Long createdOrderId = orderService.createOrder(auth, orderRequest);
@@ -40,16 +41,14 @@ public class OrderController {
 //    }
 
     //구매자가 판매자에게 환불요청
-    @PostMapping("/order/{orderId}/cancel")
-    public ResponseEntity<Void> cancelOrder(Authentication auth, @PathVariable Long orderId,
-                                                     @RequestBody OrderCancelRequest orderCancelRequest) {
-        orderService.cancelOrder(orderId, orderCancelRequest);
+    @PostMapping("/order/orderDetail/cancel")
+    public ResponseEntity<Void> cancelOrder(Authentication auth, @RequestBody OrderCancelRequest orderCancelRequest) {
+        orderService.cancelOrder(orderCancelRequest);
         return ResponseEntity.ok().build();
     }
 
     //판매자에게 구매자들의 환불요청들을 보여주는 API
-    //이건 auth가 판매자인지 확인을 해야함
-    @GetMapping("/order/cancelPending")
+    @GetMapping("/seller/order/cancelPending")
     public ResponseEntity<List<OrderCancelPendingResponse>> getAllOrderCancelPending(Authentication auth) {
         List<OrderCancelPendingResponse> orderCancelPendingResponseList = orderService.getAllOrderCancelPending();
         return ResponseEntity.ok(orderCancelPendingResponseList);

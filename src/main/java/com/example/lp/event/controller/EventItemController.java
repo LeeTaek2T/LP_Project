@@ -19,12 +19,14 @@ public class EventItemController {
         this.eventItemService = eventItemService;
     }
 
+    //특정 이벤트의 모든 이벤트 상품 조회
     @GetMapping("/event/{eventId}/eventItem")
-    public ResponseEntity<List<EventItemResponse>> getAllEventItemByEventId(@PathVariable Long eventId){
+    public ResponseEntity<List<EventItemResponse>> getAllEventItemByEventId(@PathVariable Long eventId) {
         List<EventItemResponse> eventItemResponseList = eventItemService.getAllEventItemByEventId(eventId);
         return ResponseEntity.ok(eventItemResponseList);
     }
 
+    //판매자가 특정 이벤트에 이벤트 아이템 등록
     @PostMapping("/seller/event/{eventId}/eventItem")
     public ResponseEntity<URI> registerEventItem(@PathVariable Long eventId,
                                                  @RequestBody EventItemRequest eventItemRequest){
@@ -37,18 +39,21 @@ public class EventItemController {
         return ResponseEntity.created(location).build();
     }
 
+    //판매자가 특정 이벤트의 이벤트 아이템들 조회
     @GetMapping("/seller/event/{eventId}/eventItem")
     public ResponseEntity<List<EventItemForSellerResponse>> getAllEventItemByEventIdForSeller(@PathVariable Long eventId){
         List<EventItemForSellerResponse> responseList = eventItemService.getAllEventItemByEventIdForSeller(eventId);
         return ResponseEntity.ok(responseList);
     }
 
+    //이벤트 아이템 상세 조회
     @GetMapping("/eventItem/{eventItemId}")
     public ResponseEntity<EventItemResponse> getEventItemByEventItemId(@PathVariable Long eventItemId){
         EventItemResponse eventItemResponse = eventItemService.getEventItemByEventItemId(eventItemId);
         return ResponseEntity.ok(eventItemResponse);
     }
 
+    //판매자가 이벤트 아이템 상세 조회
     @GetMapping("seller/eventItem/{eventItemId}")
     public ResponseEntity<EventItemForSellerResponse> getEventItemByEventItemIdForSeller(@PathVariable Long eventItemId){
         EventItemForSellerResponse eventItemForSellerResponse = eventItemService.getEventItemByEventItemIdForSeller(eventItemId);

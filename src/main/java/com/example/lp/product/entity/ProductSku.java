@@ -57,7 +57,7 @@ public class ProductSku {
         this.color = color;
         this.size = size;
         this.quantity = quantity;
-        this.state = "재고 있음";
+        this.state = "판매중";
         this.createdAt = OffsetDateTime.now();
         this.updatedAt = OffsetDateTime.now();
         this.product = product;
@@ -109,6 +109,10 @@ public class ProductSku {
 
     public OffsetDateTime getUpdatedAt() {
         return updatedAt;
+    }
+
+    public void changeState(String state) {
+        this.state = state;
     }
 
     public void reduceAmount(Long amount){

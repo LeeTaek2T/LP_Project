@@ -1,8 +1,6 @@
 package com.example.lp.product.controller;
 
-import com.example.lp.product.dto.request.ProductForRegisterationRequest;
 import com.example.lp.product.dto.request.ProductRequest;
-import com.example.lp.product.dto.request.ProductSkuRequest;
 import com.example.lp.product.dto.response.ProductAndSkuResponse;
 import com.example.lp.product.service.ProductService;
 import org.springframework.http.ResponseEntity;
@@ -24,7 +22,6 @@ public class ProductController {
         productService.registerProduct(productRequest, coverImage);
         return ResponseEntity.ok().build();
     }
-
 
     @GetMapping("/product")
     public ResponseEntity<List<ProductAndSkuResponse>> getAllProduct(@RequestParam(defaultValue = "0") int page,

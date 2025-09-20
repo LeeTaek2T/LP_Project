@@ -34,6 +34,9 @@ public class OrderDetail {
     @Column(name = "paid_at")
     private LocalDateTime paidAt;
 
+    @Column(name = "state")
+    private String state;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id", nullable = false)
     private Member member;
@@ -59,6 +62,7 @@ public class OrderDetail {
         this.member = member;
         this.productSku = productSku;
         this.order = order;
+        this.state = "결제중";
     }
 
     public Long getId() {
@@ -99,5 +103,9 @@ public class OrderDetail {
 
     public String getSize() {
         return size;
+    }
+
+    public void changeState(String state) {
+        this.state = state;
     }
 }

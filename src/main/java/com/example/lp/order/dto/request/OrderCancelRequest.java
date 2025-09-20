@@ -1,4 +1,8 @@
 package com.example.lp.order.dto.request;
 
-public record OrderCancelRequest(String cancelReason) {
+import java.util.List;
+
+public record OrderCancelRequest(String cancelReason,
+                                 Long orderId,
+                                 List<Long> orderDetailIdList) {
 }

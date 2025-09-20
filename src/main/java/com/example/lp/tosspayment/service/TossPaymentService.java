@@ -3,6 +3,7 @@ package com.example.lp.tosspayment.service;
 import com.example.lp.order.entity.OrderDetail;
 import com.example.lp.order.repository.OrderDetailRepository;
 import com.example.lp.product.service.ProductSkuService;
+import com.example.lp.tosspayment.dto.request.ConfirmRequest;
 import com.example.lp.tosspayment.dto.request.PaymentCancelRequest;
 import com.example.lp.tosspayment.dto.request.PaymentPreRequest;
 import com.example.lp.tosspayment.dto.response.*;
@@ -58,16 +59,16 @@ public class TossPaymentService {
                 savedTossPayment.getTossPaymentKey(), savedTossPayment.getTotalPrice(),
                 savedTossPayment.getTossPaymentStatus(), savedTossPayment.getApprovedAt());
 
-        //결제 상태 변경 : 결제 중 -> 결제 완료
+        //주문상세의 결제 상태 변경 : 결제 중 -> 결제 완료
+        //재고 개수 차감
         Order order = preTossPayment.getOrder();
-        order.changeState("결제완료");
-
-        //결제가 됐으므로 재고 개수 차감
-//        List<OrderDetail> orderDetailList = order.getOrderDetailList();
-        List<OrderDetail> orderDetailList = orderDetailRepository.findByOrder(order);
+        order.changeState("결제 완료");
+        List<OrderDetail> orderDetailList = order.getOrderDetailList();
         for (OrderDetail orderDetail : orderDetailList) {
+            orderDetail.changeState("결제 완료");
             productSkuService.reduceProductSku(orderDetail.getProductSku().getId(), orderDetail.getQuantity());
         }
+
         return confirmResponse;
     }
 
@@ -82,24 +83,25 @@ public class TossPaymentService {
     }
 
     @Transactional
-    public PaymentCancelResponse cancelPayment(TossPaymentCancelResponse tossPaymentCancelResponse) {
+    public PaymentCancelResponse cancelPayment(TossPaymentCancelResponse tossPaymentCancelResponse,
+                                               Long orderId, List<Long> orderDetailIdList) {
         TossPayment tossPayment = tossPaymentRepository.findByTossOrderId(tossPaymentCancelResponse.orderId())
-                .orElseThrow(() -> new RuntimeException("<UNK>"));
-        tossPayment.changeStatus(tossPaymentCancelResponse.status());
+                .orElseThrow(() -> new RuntimeException());
+        tossPayment.changeStatus("결제취소");
         PaymentCancelResponse paymentCancelResponse = new PaymentCancelResponse(tossPayment.getTossPaymentMethod(),
                 tossPayment.getTossOrderId(), tossPayment.getTossPaymentStatus(),
                 tossPayment.getTotalPrice());
 
-        //결제 취소 -> 해당 주문 상태 변경(취소)
-        Order order = tossPayment.getOrder();
-        order.changeState("CANCELED");
-
+        //결제 취소 -> 주문 및 상세들 상태 변경(결제취소)
         //결제 취소 -> 해당 상품들 재고 추가
-        List<OrderDetail> orderDetailList = orderDetailRepository.findByOrder(order);
-        for (OrderDetail orderDetail : orderDetailList) {
+        Order order = tossPayment.getOrder();
+        order.changeState("결제취소");
+        for (Long orderDetailId : orderDetailIdList) {
+            OrderDetail orderDetail = orderDetailRepository.findById(orderDetailId)
+                    .orElseThrow(() -> new RuntimeException());
+            orderDetail.changeState("결제취소");
             productSkuService.plusProductSku(orderDetail.getProductSku().getId(), orderDetail.getQuantity());
         }
-
         return paymentCancelResponse;
     }
 
@@ -109,5 +111,13 @@ public class TossPaymentService {
         TossPayment tossPayment = tossPaymentRepository.findByOrder(order)
                 .orElseThrow(() -> new RuntimeException());
         return tossPayment.getTossPaymentKey();
+    }
+
+    public void checkOrder(ConfirmRequest confirmRequest) {
+        TossPayment tossPayment = tossPaymentRepository.findByTossOrderId(confirmRequest.tossOrderId())
+                .orElseThrow(() -> new RuntimeException());
+        if(confirmRequest.amount()!=tossPayment.getTotalPrice()){
+            new RuntimeException("not same price");
+        }
     }
 }

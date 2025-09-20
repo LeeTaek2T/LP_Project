@@ -46,7 +46,7 @@ public class OrderService {
     }
 
     public List<OrderCancelPendingResponse> getAllOrderCancelPending() {
-        List<Order> orderList = orderRepository.findByState("CANCEL_PENDING");
+        List<Order> orderList = orderRepository.findByState("취소요청");
         List<OrderCancelPendingResponse> orderCancelPendingResponseList =
                 convertOrderCancelPendingResponseList(orderList);
         return orderCancelPendingResponseList;
@@ -55,7 +55,8 @@ public class OrderService {
     private List<OrderCancelPendingResponse> convertOrderCancelPendingResponseList(List<Order> orderList) {
         List<OrderCancelPendingResponse> orderCancelPendingResponseList = new ArrayList<>();
         for (Order order : orderList) {
-            List<OrderDetailResponse> orderDetailResponseList = getOrderDetailByOrderId(order.getId());
+            List<OrderDetailResponse> orderDetailResponseList =
+                    getOrderDetailByOrderAndOrderDetailState(order);
             OrderCancelPendingResponse orderCancelPendingResponse = new OrderCancelPendingResponse(order.getId(),
                     orderDetailResponseList, order.getTotalPrice(), order.getCancelReason());
             orderCancelPendingResponseList.add(orderCancelPendingResponse);
@@ -63,13 +64,8 @@ public class OrderService {
         return orderCancelPendingResponseList;
     }
 
-    public List<OrderDetailResponse> getOrderDetailByOrderId(Long orderId) {
-        Order order = orderRepository.findById(orderId)
-                .orElseThrow(() -> new RuntimeException("<UNK>"));
-        List<OrderDetail> orderDetailList = orderDetailRepository.findByOrder(order);
-
-        //        List<OrderDetail> orderDetailList = order.getOrderDetailList();
-
+    public List<OrderDetailResponse> getOrderDetailByOrderAndOrderDetailState(Order order) {
+        List<OrderDetail> orderDetailList = orderDetailRepository.findByOrderAndState(order, "취소요청");
         List<OrderDetailResponse> orderDetailResponseList = convertToOrderDetailResponseList(orderDetailList);
         return orderDetailResponseList;
     }
@@ -86,9 +82,14 @@ public class OrderService {
     }
 
     @Transactional
-    public void cancelOrder(Long orderId, OrderCancelRequest orderCancelRequest) {
-        Order order = orderRepository.findById(orderId)
-                .orElseThrow(() -> new RuntimeException("<UNK>"));
-        order.changeState("CANCEL_PENDING");
+    public void cancelOrder(OrderCancelRequest orderCancelRequest) {
+        Order order = orderRepository.findById(orderCancelRequest.orderId())
+                .orElseThrow(() -> new RuntimeException());
+        order.changeState("취소요청");
+        for(Long orderDetailId : orderCancelRequest.orderDetailIdList()){
+            OrderDetail orderDetail = orderDetailRepository.findById(orderDetailId)
+                    .orElseThrow(() -> new RuntimeException("<UNK>"));
+            orderDetail.changeState("취소요청");
+        }
     }
 }

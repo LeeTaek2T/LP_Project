@@ -36,11 +36,11 @@ public class Order {
     @Column(name = "created_at")
     private OffsetDateTime createdAt;
 
-    @Column(name = "state")
-    private String state;
-
     @Column(name = "cancel_reason")
     private String cancelReason;
+
+    @Column(name = "state")
+    private String state;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id", nullable = false)
@@ -62,45 +62,11 @@ public class Order {
         this.addressDetail = addressDetail;
         this.postCode = postCode;
         this.createdAt = OffsetDateTime.now();
-        this.state = "결제 진행 중";
         this.member = member;
+        this.state = "결제중";
     }
 
     public Order(){}
-
-    public Order(Long totalPrice, String address, String postCode, Member member) {
-        this.totalPrice = totalPrice;
-        this.address = address;
-        this.postCode = postCode;
-        this.createdAt = createdAt;
-        this.state = state;
-        this.member = member;
-    }
-
-    public Order(Long id, Member member, Long totalPrice, String address, String postCode,
-                 OffsetDateTime createdAt, String state){
-        this.id = id;
-        this.member = member;
-        this.totalPrice = totalPrice;
-        this.address = address;
-        this.postCode = postCode;
-        this.createdAt = createdAt;
-        this.state = state;
-    }
-
-    public Order(Long id,Member member, Long totalPrice, String address, String postCode,
-                 OffsetDateTime createdAt, String state, String cancelReason){
-        this.id = id;
-        this.member = member;
-        this.totalPrice = totalPrice;
-        this.address = address;
-        this.postCode = postCode;
-        this.createdAt = createdAt;
-        this.state = state;
-        this.cancelReason = cancelReason;
-    }
-
-
 
     public Long getId() {
         return this.id;
@@ -112,10 +78,6 @@ public class Order {
 
     public Long getTotalPrice() {
         return totalPrice;
-    }
-
-    public String getState() {
-        return state;
     }
 
     public String getAddress() {
