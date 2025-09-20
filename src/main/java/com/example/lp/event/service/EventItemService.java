@@ -14,6 +14,7 @@ import com.example.lp.product.repository.ProductSkuRepository;
 import com.example.lp.product.service.ProductService;
 import com.example.lp.product.service.ProductSkuService;
 import jakarta.transaction.Transactional;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -62,6 +63,11 @@ public class EventItemService {
 
     }
 
+    @Cacheable(
+            value = "event:eventItem:list",
+            key = "'items_of_event' + #eventId",
+            sync = true
+    )
     public List<EventItemResponse> getAllEventItemByEventId(Long eventId) {
         List<EventItem> eventItemList = eventItemRepository.findByEventId(eventId);
         List<EventItemResponse> eventItemResponseList = convertToEventItemResponseList(eventItemList);
@@ -100,6 +106,11 @@ public class EventItemService {
         return eventItemForSellerResponseList;
     }
 
+    @Cacheable(
+            value = "eventItem:detail",
+            key = "'eventItemId' + #eventItemId",
+            sync = true
+    )
     public EventItemResponse getEventItemByEventItemId(Long eventItemId) {
         EventItem eventItem = eventItemRepository.findById(eventItemId)
                 .orElseThrow(() -> new RuntimeException());

@@ -19,12 +19,22 @@ public class CacheConfig {
                 .serializeKeysWith(RedisSerializationContext.SerializationPair.fromSerializer(new StringRedisSerializer()))
                 .serializeValuesWith(RedisSerializationContext.SerializationPair.fromSerializer(new GenericJackson2JsonRedisSerializer()))
                 .disableCachingNullValues()
-                .entryTtl(Duration.ofSeconds(60));
+                .entryTtl(Duration.ofSeconds(300));
     }
 
     @Bean
     public RedisCacheManagerBuilderCustomizer redisCustomizer() {
         return builder -> builder
+                .withCacheConfiguration("event:eventItem:list",
+                        RedisCacheConfiguration.defaultCacheConfig()
+                                .serializeKeysWith(RedisSerializationContext.SerializationPair.fromSerializer(new StringRedisSerializer()))
+                                .serializeValuesWith(RedisSerializationContext.SerializationPair.fromSerializer(new GenericJackson2JsonRedisSerializer()))
+                                .entryTtl(Duration.ofSeconds(60)))
+                .withCacheConfiguration("eventItem:detail",
+                        redisCacheConfiguration()
+                                .serializeKeysWith(RedisSerializationContext.SerializationPair.fromSerializer(new StringRedisSerializer()))
+                                .serializeValuesWith(RedisSerializationContext.SerializationPair.fromSerializer(new GenericJackson2JsonRedisSerializer()))
+                                .entryTtl(Duration.ofSeconds(60)))
                 .withCacheConfiguration("prod:list",
                         RedisCacheConfiguration.defaultCacheConfig()
                                 .serializeKeysWith(RedisSerializationContext.SerializationPair.fromSerializer(new StringRedisSerializer()))
