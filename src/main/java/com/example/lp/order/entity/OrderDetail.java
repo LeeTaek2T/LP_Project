@@ -105,6 +105,10 @@ public class OrderDetail {
         return size;
     }
 
+    public String getProductCoverImageUrl() {
+        return productCoverImageUrl;
+    }
+
     public void changeState(String state) {
         this.state = state;
     }

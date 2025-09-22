@@ -15,7 +15,7 @@ public class Order {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "total_price")
+    @Column(name = "total_price", nullable = false)
     private Long totalPrice;
 
     @Column(name = "dear_name")
@@ -66,6 +66,12 @@ public class Order {
         this.state = "결제중";
     }
 
+    public Order(Long totalPrice, Member member) {
+        this.totalPrice = totalPrice;
+        this.member = member;
+        this.state = "결제중";
+    }
+
     public Order(){}
 
     public Long getId() {
@@ -84,6 +90,14 @@ public class Order {
         return address;
     }
 
+    public String getAddressDetail() {
+        return addressDetail;
+    }
+
+    public String getPhoneNumber(){
+        return phoneNumber;
+    }
+
     public String getPostCode() {
         return postCode;
     }
@@ -100,7 +114,31 @@ public class Order {
         return member;
     }
 
+    public String getDearName() {
+        return dearName;
+    }
+
     public void changeState(String state) {
         this.state = state;
+    }
+
+    public void setDearName(String dearName) {
+        this.dearName = dearName;
+    }
+
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public void setAddressDetail(String addressDetail) {
+        this.addressDetail = addressDetail;
+    }
+
+    public void setPostCode(String postCode) {
+        this.postCode = postCode;
     }
 }

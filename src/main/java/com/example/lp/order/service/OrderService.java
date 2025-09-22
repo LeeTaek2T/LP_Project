@@ -1,12 +1,17 @@
 package com.example.lp.order.service;
 
+import com.example.lp.kafka.dto.request.KafkaPaymentRequest;
+import com.example.lp.kafka.service.KafkaProducerService;
 import com.example.lp.member.entity.Member;
 import com.example.lp.member.repository.MemberRepository;
+import com.example.lp.order.dto.request.AddressRequest;
 import com.example.lp.order.dto.request.OrderCancelRequest;
+import com.example.lp.order.dto.request.OrderProductInfo;
 import com.example.lp.order.dto.request.OrderRequest;
 import com.example.lp.order.dto.response.OrderCancelPendingResponse;
 import com.example.lp.order.dto.response.OrderCancelResponse;
 import com.example.lp.order.dto.response.OrderDetailResponse;
+import com.example.lp.order.dto.response.OrderResponse;
 import com.example.lp.order.entity.Order;
 import com.example.lp.order.entity.OrderDetail;
 import com.example.lp.order.repository.OrderDetailRepository;
@@ -24,21 +29,31 @@ public class OrderService {
     private final OrderDetailService orderDetailService;
     private final MemberRepository memberRepository;
     private final OrderDetailRepository orderDetailRepository;
+    private final StockService stockService;
 
     public OrderService(OrderRepository orderRepository, OrderDetailService orderDetailService,
-                        MemberRepository memberRepository, OrderDetailRepository orderDetailRepository) {
+                        MemberRepository memberRepository, OrderDetailRepository orderDetailRepository,
+                        StockService stockService) {
         this.orderRepository = orderRepository;
         this.orderDetailService = orderDetailService;
         this.memberRepository = memberRepository;
         this.orderDetailRepository = orderDetailRepository;
+        this.stockService = stockService;
     }
 
     @Transactional
     public Long createOrder(Authentication auth, OrderRequest orderRequest) {
+        // 1. Redis 재고 선점을 먼저 시도합니다.
+        boolean stockDecreased = stockService.decreaseStock(orderRequest);
+
+        // 2. 재고 선점에 실패하면, 예외를 발생시켜 주문 절차를 중단합니다.
+        if (!stockDecreased) {
+            throw new RuntimeException("재고가 부족합니다.");
+        }
+
         Member member = memberRepository.findByEmail(auth.getName())
                 .orElseThrow(()-> new RuntimeException());
-        Order order = new Order(orderRequest.totalPrice(), orderRequest.dearName() ,orderRequest.phoneNumber(),
-                orderRequest.address(), orderRequest.addressDetail(), orderRequest.postcode(), member);
+        Order order = new Order(orderRequest.totalPrice(), member);
         Order createdOrder = orderRepository.save(order);
 
         orderDetailService.createOrderDetail(createdOrder, member, orderRequest.orderProductInfoList());
@@ -91,5 +106,17 @@ public class OrderService {
                     .orElseThrow(() -> new RuntimeException("<UNK>"));
             orderDetail.changeState("취소요청");
         }
+    }
+
+    @Transactional
+    public void confirmOrder(AddressRequest addressRequest, Authentication auth) {
+        Order order = orderRepository.findById(addressRequest.orderId())
+                .orElseThrow(() -> new RuntimeException());
+        order.changeState("결제대기");
+        order.setAddress(addressRequest.address());
+        order.setAddressDetail(addressRequest.addressDetail());
+        order.setDearName(addressRequest.dearName());
+        order.setPostCode(addressRequest.postcode());
+        order.setPhoneNumber(addressRequest.phoneNumber());
     }
 }
