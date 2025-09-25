@@ -56,16 +56,6 @@ public class Member{
 
     public Member() {}
 
-    public Member(String email, String password, String phoneNumber, String role,
-                  String state, OffsetDateTime createdAt, String userName) {
-        this.email = email;
-        this.password = password;
-        this.phoneNumber = phoneNumber;
-        this.role = role;
-        this.createdAt = createdAt;
-        this.userName = userName;
-    }
-
     public Member(String email, String password, String phoneNumber, String userName) {
         this.email = email;
         this.password = password;

@@ -27,15 +27,13 @@ public class MemberService {
     private final MemberRepository memberRepository;
     private final JwtUtil jwtUtil;
     private final PasswordEncoder passwordEncoder;
-    private final RefreshTokenService refreshTokenRepository;
     private final RefreshTokenService refreshTokenService;
 
     public MemberService(MemberRepository memberRepository, JwtUtil jwtUtil, PasswordEncoder passwordEncoder,
-                         RefreshTokenService refreshTokenRepository, RefreshTokenService refreshTokenService) {
+                         RefreshTokenService refreshTokenService) {
         this.memberRepository = memberRepository;
         this.jwtUtil = jwtUtil;
         this.passwordEncoder = passwordEncoder;
-        this.refreshTokenRepository = refreshTokenRepository;
         this.refreshTokenService = refreshTokenService;
     }
 
@@ -53,7 +51,6 @@ public class MemberService {
 
     @Transactional
     public AccessTokenResponse login(LoginRequest loginRequest, HttpServletRequest httpReq, HttpServletResponse httpRes ) {
-
         Member member = memberRepository.findByEmail((loginRequest.email()))
                 .orElseThrow(() -> new RuntimeException());
         if(! passwordEncoder.matches(loginRequest.password(), member.getPassword())){
@@ -116,9 +113,7 @@ public class MemberService {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
         }
 
-        //뭐를 반환하는지 확인해야함
         String userEmail = member.getName();
-
         refreshTokenService.revokeAllForUser(userEmail); // 모든 기기 로그아웃
         clearRefreshCookie(res);                // 쿠키 삭제
     }
@@ -145,7 +140,7 @@ public class MemberService {
         org.springframework.http.ResponseCookie cookie = org.springframework.http.ResponseCookie.from("refresh_token", refreshJwt)
                 .httpOnly(true)
                 .secure(true)                    // HTTPS
-                .sameSite("Lax")                 // 크로스 도메인이면 "None" + secure
+                .sameSite("Lax")
                 .path("/api/member/refresh")           // 재발급 경로로만 전송
                 .maxAge(java.time.Duration.ofDays(14))
                 .build();

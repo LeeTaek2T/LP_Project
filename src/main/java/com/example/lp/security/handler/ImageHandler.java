@@ -14,6 +14,7 @@ public class ImageHandler {
     public ImageHandler(@Value("${image.base-dir}") String baseDir) {
             this.baseDir = baseDir;
     }
+
     public String saveProductImage(String productName, MultipartFile image) {
         String fileName = getOriginName(image);
         File dir = new File(baseDir, productName);

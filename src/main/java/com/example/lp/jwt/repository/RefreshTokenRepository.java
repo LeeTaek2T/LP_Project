@@ -16,6 +16,7 @@ public interface RefreshTokenRepository extends JpaRepository<RefreshToken, Long
     // 단일 세션 정책
     @Modifying
     @Query("update RefreshToken rt set rt.revoked=true " +
-            "where rt.userEmail=:userEmail and rt.revoked=false")    void revokeAllForUser(@Param("userEmail") String userEmail);
+            "where rt.userEmail=:userEmail and rt.revoked=false")
+    void revokeAllForUser(@Param("userEmail") String userEmail);
 
 }
