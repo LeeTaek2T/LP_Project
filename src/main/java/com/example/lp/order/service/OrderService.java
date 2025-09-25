@@ -1,7 +1,5 @@
 package com.example.lp.order.service;
 
-import com.example.lp.kafka.dto.request.KafkaPaymentRequest;
-import com.example.lp.kafka.service.KafkaProducerService;
 import com.example.lp.member.entity.Member;
 import com.example.lp.member.repository.MemberRepository;
 import com.example.lp.order.dto.request.AddressRequest;
