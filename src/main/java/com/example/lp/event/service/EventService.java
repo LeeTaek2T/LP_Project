@@ -5,6 +5,7 @@ import com.example.lp.event.dto.Response.EventResponse;
 import com.example.lp.event.entity.Event;
 import com.example.lp.event.mapper.EventMapper;
 import com.example.lp.event.repository.EventRepository;
+import com.example.lp.s3.service.S3ImageService;
 import com.example.lp.security.handler.ImageHandler;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -16,17 +17,17 @@ import java.util.List;
 public class EventService {
     private final EventRepository eventRepository;
     private final EventMapper eventMapper;
-    private final ImageHandler imageHandler;
+    private final S3ImageService s3ImageService;
 
     public EventService(EventRepository eventRepository, EventMapper eventMapper,
-                        ImageHandler imageHandler) {
+                        S3ImageService s3ImageService) {
         this.eventRepository = eventRepository;
         this.eventMapper = eventMapper;
-        this.imageHandler = imageHandler;
+        this.s3ImageService = s3ImageService;
     }
 
     public Long registerEvent(EventRequest eventRequest, MultipartFile coverImage){
-        String savedCoverImageUrl = imageHandler.saveEventImage(eventRequest.name(), coverImage);
+        String savedCoverImageUrl = s3ImageService.upload(coverImage);
         Event event = eventMapper.requestToEntity(eventRequest, savedCoverImageUrl);
         Event registerdEvent = eventRepository.save(event);
         return registerdEvent.getId();

@@ -20,6 +20,7 @@ bin/
 ### IntelliJ IDEA ###
 **/application-jwt.properties
 **/application.properties
+**/application-s3.properties
 **/application-toss.properties
 **/application-image.properties
 .idea
