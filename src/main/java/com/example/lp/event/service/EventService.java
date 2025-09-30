@@ -6,7 +6,6 @@ import com.example.lp.event.entity.Event;
 import com.example.lp.event.mapper.EventMapper;
 import com.example.lp.event.repository.EventRepository;
 import com.example.lp.s3.service.S3ImageService;
-import com.example.lp.security.handler.ImageHandler;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 

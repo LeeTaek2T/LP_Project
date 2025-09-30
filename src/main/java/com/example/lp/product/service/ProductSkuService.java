@@ -19,16 +19,14 @@ public class ProductSkuService {
     private final ProductSkuRepository productSkuRepository;
     private final ProductSkuImageService productSkuImageService;
     private final ProductRepository productRepository;
-    private final ImageHandler imageHandler;
     private final S3ImageService s3ImageService;
 
     public ProductSkuService(ProductSkuRepository productSkuRepository,
                              ProductSkuImageService productSkuImageService, ProductRepository productRepository,
-                             ImageHandler imageHandler, S3ImageService s3ImageService) {
+                             S3ImageService s3ImageService) {
         this.productSkuRepository = productSkuRepository;
         this.productSkuImageService = productSkuImageService;
         this.productRepository = productRepository;
-        this.imageHandler = imageHandler;
         this.s3ImageService = s3ImageService;
     }
 
