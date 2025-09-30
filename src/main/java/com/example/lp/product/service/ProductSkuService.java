@@ -1,5 +1,6 @@
 package com.example.lp.product.service;
 
+import com.example.lp.s3.service.S3ImageService;
 import com.example.lp.security.handler.ImageHandler;
 import com.example.lp.product.dto.request.ProductSkuRequest;
 import com.example.lp.product.dto.response.ProductSkuResponse;
@@ -19,14 +20,16 @@ public class ProductSkuService {
     private final ProductSkuImageService productSkuImageService;
     private final ProductRepository productRepository;
     private final ImageHandler imageHandler;
+    private final S3ImageService s3ImageService;
 
     public ProductSkuService(ProductSkuRepository productSkuRepository,
                              ProductSkuImageService productSkuImageService, ProductRepository productRepository,
-                             ImageHandler imageHandler) {
+                             ImageHandler imageHandler, S3ImageService s3ImageService) {
         this.productSkuRepository = productSkuRepository;
         this.productSkuImageService = productSkuImageService;
         this.productRepository = productRepository;
         this.imageHandler = imageHandler;
+        this.s3ImageService = s3ImageService;
     }
 
     public List<ProductSkuResponse> convertToProductSkuResponseList(Product product){
@@ -87,7 +90,7 @@ public class ProductSkuService {
 
         //sku이미지 생성
         for (MultipartFile productSkuImage : productSkuImageList) {
-            String productSkuImageUrl = imageHandler.saveSkuImage(product.getName(), productSkuImage);
+            String productSkuImageUrl = s3ImageService.upload(productSkuImage);
             productSkuImageService.registerProductSkuImages(productSkuImageUrl, savedProductSku);
         }
     }

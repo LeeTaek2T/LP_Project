@@ -2,6 +2,7 @@ package com.example.lp.product.service;
 
 import com.example.lp.event.entity.EventItem;
 import com.example.lp.event.repository.EventItemRepository;
+import com.example.lp.s3.service.S3ImageService;
 import com.example.lp.security.handler.ImageHandler;
 import com.example.lp.product.dto.request.ProductRequest;
 import com.example.lp.product.dto.response.ProductAndSkuResponse;
@@ -23,20 +24,20 @@ public class ProductService {
     private final ProductRepository productRepository;
     private final ProductSkuService productSkuService;
     private final EventItemRepository eventItemRepository;
-    private final ImageHandler imageHandler;
+    private final S3ImageService s3ImageService;
 
     public ProductService(ProductRepository productRepository,
                           ProductSkuService productSkuService, EventItemRepository eventItemRepository,
-                          ImageHandler imageHandler) {
+                          S3ImageService s3ImageService) {
         this.productRepository = productRepository;
         this.productSkuService = productSkuService;
         this.eventItemRepository = eventItemRepository;
-        this.imageHandler = imageHandler;
+        this.s3ImageService = s3ImageService;
     }
 
     public void registerProduct(ProductRequest productRequest, MultipartFile coverImage) {
 
-        String savedCoverImageUrl = imageHandler.saveProductImage(productRequest.name(), coverImage);
+        String savedCoverImageUrl = s3ImageService.upload(coverImage);
         Product product = new Product(productRequest.name(), productRequest.price(), savedCoverImageUrl, productRequest.category());
         Product savedProduct = productRepository.save(product);
     }
