@@ -3,7 +3,6 @@ package com.example.lp.product.service;
 import com.example.lp.event.entity.EventItem;
 import com.example.lp.event.repository.EventItemRepository;
 import com.example.lp.s3.service.S3ImageService;
-import com.example.lp.security.handler.ImageHandler;
 import com.example.lp.product.dto.request.ProductRequest;
 import com.example.lp.product.dto.response.ProductAndSkuResponse;
 import com.example.lp.product.dto.response.ProductSkuResponse;
