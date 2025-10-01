@@ -59,7 +59,7 @@ jobs:
     steps:
     - name : EC2접속
     - uses : appleboy/ssh-action@master
-    with :
+      with :
         host: ${{secrets.SERVER_IP}}
         username: ${{secrets.SSH_USER}}
         key : ${{secrets.SSH_PRIVATE_KEY}}
