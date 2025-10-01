@@ -32,33 +32,35 @@ jobs:
       uses: gradle/actions/setup-gradle@af1da67850ed9a4cedd57bfd976089dd991e2582 # v4.0.0
 
     - name: Build with Gradle Wrapper
-      run: ./gradlew build -x test  # 테스트를 제외하여 빌드 속도 향상
+      run: ./gradlew build -x test
 
     - name: Rename build file
       run: mv ./build/libs/*SNAPSHOT.jar cicdtest.jar
 
-    - name: Transfer build file to EC2
+    # 1. EC2로 전송할 파일 변경
+    - name: Transfer files to EC2
       uses: appleboy/scp-action@master
       with:
         host: ${{ secrets.SERVER_IP }}
         username: ${{ secrets.SSH_USER }}
         key: ${{ secrets.SSH_PRIVATE_KEY }}
-        source: cicdtest.jar # 수정됨
-        target: /home/ubuntu
+        source: "cicdtest.jar,Dockerfile,docker-compose.yml" # JAR, Dockerfile, docker-compose.yml 전송
+        target: "/home/ubuntu/app" # 배포용 디렉토리 지정
 
   deploy:
     needs: build
     runs-on: ubuntu-latest
 
     steps:
-    - name: Connect to EC2 and execute commands
+    # 2. EC2 접속 후 실행할 스크립트 변경
+    - name: Connect to EC2 and deploy with Docker Compose
       uses: appleboy/ssh-action@master
       with:
         host: ${{ secrets.SERVER_IP }}
         username: ${{ secrets.SSH_USER }}
         key: ${{ secrets.SSH_PRIVATE_KEY }}
-        script_stop: true
         script: |
-          sudo fuser -k -n tcp 8080 || true
-          cd /home/ubuntu
-          sudo nohup java -jar cicdtest.jar > ./output.log 2>&1 &
+          cd /home/ubuntu/app
+          sudo docker-compose down
+          sudo docker-compose up --build -d
+          sudo docker image prune -f
