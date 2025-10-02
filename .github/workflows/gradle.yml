@@ -37,6 +37,25 @@ jobs:
     - name: Rename build file
       run: mv ./build/libs/*SNAPSHOT.jar cicdtest.jar
 
+    - name: Get GitHub Actions Runner's IP
+      id: get_ip # 이 step의 출력을 참조하기 위한 ID
+      run: echo "runner_ip=$(curl -s ifconfig.me)" >> $GITHUB_OUTPUT
+
+    - name: Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v4
+      with:
+        aws-access-key-id: ${{ secrets.AWS_GITHUB_ACTIONS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_GITHUB_ACTIONS_SECRET_ACCESS_KEY }}
+        aws-region: ${{ secrets.AWS_REGION }}
+
+    - name: Add Runner IP to EC2 Security Group
+      run: |
+        aws ec2 authorize-security-group-ingress \
+          --group-id ${{ secrets.SECURITY_GROUP_ID }} \
+          --protocol tcp \
+          --port 22 \
+          --cidr ${{ steps.get_ip.outputs.runner_ip }}/32
+
     # 1. EC2로 전송할 파일 변경
     - name: Transfer files to EC2
       uses: appleboy/scp-action@master
@@ -46,6 +65,16 @@ jobs:
         key: ${{ secrets.SSH_PRIVATE_KEY }}
         source: "cicdtest.jar,Dockerfile,docker-compose.yml" # JAR, Dockerfile, docker-compose.yml 전송
         target: "/home/ubuntu/app" # 배포용 디렉토리 지정
+
+    - name: Remove Runner IP from EC2 Security Group
+      if: always() # 이 job의 성공/실패와 상관없이 항상 실행
+      run: |
+        aws ec2 revoke-security-group-ingress \
+          --group-id ${{ secrets.SECURITY_GROUP_ID }} \
+          --protocol tcp \
+          --port 22 \
+          --cidr ${{ steps.get_ip.outputs.runner_ip }}/32
+
 
   deploy:
     needs: build
