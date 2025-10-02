@@ -57,8 +57,6 @@ jobs:
         username: ${{ secrets.SSH_USER }}
         key: ${{ secrets.SSH_PRIVATE_KEY }}
         script: |
-          # scp-action을 사용하지 않고 ssh-action 내에서 파일 전송과 배포를 모두 처리할 수도 있습니다.
-          # 하지만 기존 방식을 유지하기 위해 scp와 ssh를 분리합니다.
           echo "Transferring files..."
 
     - name: Transfer files to EC2
@@ -77,10 +75,10 @@ jobs:
         username: ${{ secrets.SSH_USER }}
         key: ${{ secrets.SSH_PRIVATE_KEY }}
         script: |
-          cd /home/ubuntu/app
-          sudo docker-compose down
-          sudo docker-compose up --build -d
-          sudo docker image prune -f
+          cd /home/ubuntu/LP_Project
+          docker compose down -v
+          docker compose up --build -d
+          docker image prune -f
           
     # --- 정리 단계 ---
     - name: Remove Runner IP from EC2 Security Group
