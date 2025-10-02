@@ -7,35 +7,50 @@ on:
     branches: [ "develop" ]
 
 jobs:
-  # Job 이름을 build-and-deploy로 변경하고 하나로 통합
   build-and-deploy:
     runs-on: ubuntu-latest
     permissions:
       contents: read
       
     steps:
-    # --- 빌드 단계 ---
+    #소스코드를 가상 서버로 가져오기
     - uses: actions/checkout@v4
+
+    #자바 환경 설정
     - name: Set up JDK 17
       uses: actions/setup-java@v4
       with:
         java-version: '17'
         distribution: 'temurin'
+        
+    #properties 파일 생성
     - name: Make application.properties
       run: |
         mkdir -p src/main/resources
         echo "${{ secrets.APPLICATION_PROPERTIES }}" > ./src/main/resources/application.properties
-        # (이하 생략)
+        echo "${{ secrets.APPLICATION_JWT_PROPERTIES }}" > ./src/main/resources/application-jwt.properties
+        echo "${{ secrets.APPLICATION_S3_PROPERTIES }}" > ./src/main/resources/application-s3.properties
+        echo "${{ secrets.APPLICATION_TOSS_PROPERTIES }}" > ./src/main/resources/application-toss.properties
+
+    #Gradle 빌드 환경 설정
     - name: Setup Gradle
       uses: gradle/actions/setup-gradle@af1da67850ed9a4cedd57bfd976089dd991e2582 # v4.0.0
+
+    #프로젝트 빌드
     - name: Build with Gradle Wrapper
       run: ./gradlew build -x test
 
-    # --- EC2 접속 및 배포 단계 ---
+    - name: Rename JAR file
+      run: mv ./build/libs/*-SNAPSHOT.jar app.jar
+
+
+    #EC2 접속 및 배포 단계 
+    #Runner의 공인 IP주소 확인
     - name: Get GitHub Actions Runner's IP
       id: get_ip
       run: echo "runner_ip=$(curl -s ifconfig.me)" >> $GITHUB_OUTPUT
 
+    #AWS EC2 보안그룹 제어를 위한 AWS 자격증명 설정
     - name: Configure AWS credentials
       uses: aws-actions/configure-aws-credentials@v4
       with:
@@ -43,6 +58,7 @@ jobs:
         aws-secret-access-key: ${{ secrets.AWS_GITHUB_ACTIONS_SECRET_ACCESS_KEY }}
         aws-region: ${{ secrets.AWS_REGION }}
 
+    #EC2 인스턴스에 SSH로 접속할 수 있도록 Runner의 IP를 보안그룹에 추가
     - name: Add Runner IP to EC2 Security Group
       run: |
         aws ec2 authorize-security-group-ingress \
@@ -50,6 +66,7 @@ jobs:
           --protocol tcp --port 22 \
           --cidr ${{ steps.get_ip.outputs.runner_ip }}/32
 
+    #SSH 접속 테스트
     - name: Transfer and Deploy files
       uses: appleboy/ssh-action@master
       with:
@@ -59,15 +76,17 @@ jobs:
         script: |
           echo "Transferring files..."
 
+    #배포에 필요한 파일을 EC2로 전송
     - name: Transfer files to EC2
       uses: appleboy/scp-action@master
       with:
         host: ${{ secrets.SERVER_IP }}
         username: ${{ secrets.SSH_USER }}
         key: ${{ secrets.SSH_PRIVATE_KEY }}
-        source: "Dockerfile,docker-compose.yml"
+        source: "app.jar"
         target: "/home/ubuntu/LP_Project"
 
+    #EC2에 SSH로 접속하여 Docker Compose로 애플리케이션에 배포
     - name: Deploy with Docker Compose
       uses: appleboy/ssh-action@master
       with:
@@ -80,7 +99,7 @@ jobs:
           docker compose up --build -d
           docker image prune -f
           
-    # --- 정리 단계 ---
+    #보안을 위해 job의 성공/실패 여부 관계없이 Ec2 보안그룹에 추가했던 Runner의 IP삭제
     - name: Remove Runner IP from EC2 Security Group
       if: always() # job의 성공/실패와 상관없이 항상 실행
       run: |
