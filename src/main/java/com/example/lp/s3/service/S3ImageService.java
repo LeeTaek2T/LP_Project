@@ -1,7 +1,6 @@
 package com.example.lp.s3.service;
 
 import com.amazonaws.services.s3.AmazonS3;
-import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.DeleteObjectRequest;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
@@ -64,7 +63,7 @@ public class S3ImageService {
     }
 
     private String uploadImageToS3(MultipartFile image) throws IOException {
-        String originalFilename = image.getOriginalFilename(); //원본 파일 명
+        String originalFilename = image.getOriginalFilename();
         String extention = originalFilename.substring(originalFilename.lastIndexOf(".")); //확장자 명
 
         String s3FileName = UUID.randomUUID().toString().substring(0, 10) + originalFilename; //변경된 파일 명
@@ -80,11 +79,10 @@ public class S3ImageService {
         try{
             PutObjectRequest putObjectRequest =
                     new PutObjectRequest(bucketName, s3FileName, byteArrayInputStream, metadata);
-            amazonS3.putObject(putObjectRequest); // put image to S3
+            amazonS3.putObject(putObjectRequest);
         }catch (Exception e){
             e.printStackTrace();
 
-            // 2. 원래 발생한 예외를 포함해서 던지기
             throw new RuntimeException("S3 파일 업로드 중 오류 발생", e);
         }finally {
             byteArrayInputStream.close();
