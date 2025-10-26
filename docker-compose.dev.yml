@@ -1,0 +1,71 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile : Dockerfile.dev
+    container_name: my-spring-app-container
+    platform: linux/amd64
+    ports:
+      - "8080:8080"
+    environment: # spring app 설정
+      SPRING_DATASOURCE_URL: jdbc:h2:tcp://db:1521/test # h2 db url
+      SPRING_DATASOURCE_USERNAME: sa # h2 db id
+      SPRING_DATASOURCE_PASSWORD: # h2 db password
+      SPRING_JPA_HIBERNATE_DDL_AUTO: none
+      # DB 종류나 ddl-auto 옵션에 상관없이 무조건 data.sql을 실행합니다.
+      SPRING_SQL_INIT_MODE: always
+    depends_on: # app 서비스 시작 전 실행되어야 하는 서비스
+      - db
+
+  db: # db 서비스
+    container_name: h2 # 컨테이너 이름
+    image: oscarfonts/h2:latest # h2 이미지
+    ports: # 포트포워딩
+      - 1521:1521 # TCP 포트 : 데이터베이스 연결 포트
+      - 8081:81 # HTTP 포트 : 웹콘솔 연결 포트
+    environment: #h2 설정
+      H2_OPTIONS: -ifNotExists # DB가 이미 존재하면 재생성 X
+    volumes:
+      - ./h2/:/opt/h2-data # host 서버와 연결되는 통로 ( 저장 및 백업 경로 )
+    restart: always # 컨테이너 종료시 자동 재실행
+
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: prometheus
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml:ro
+    ports:
+      - "9090:9090"
+  grafana:
+    image: grafana/grafana:latest
+    container_name: grafana
+    ports:
+      - "3000:3000"
+    depends_on:
+      - prometheus
+
+  redis:
+    image: redis:latest
+    container_name: redis
+    ports:
+      - "6379:6379"
+
+  zookeeper:
+    image: wurstmeister/zookeeper
+    container_name: zookeeper
+    ports:
+      - "2181:2181"
+  kafka:
+    image: wurstmeister/kafka
+    container_name: kafka
+    ports:
+      - "9092:9092"
+    depends_on:
+      - zookeeper
+    environment:
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_ADVERTISED_HOST_NAME: 127.0.0.1 # 로컬 환경에 맞게 설정
+      KAFKA_ADVERTISED_PORT: 9092
+      KAFKA_AUTO_CREATE_TOPICS_ENABLE: "true"  # 자동으로 토픽생성
+#      KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:9092
+#      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092

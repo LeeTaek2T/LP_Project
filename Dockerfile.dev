@@ -1,0 +1,13 @@
+# ec2버전
+#FROM openjdk:17-jdk-slim
+#WORKDIR /app
+#ARG JAR_FILE=./*.jar
+#COPY ${JAR_FILE} b_app.jar
+#ENV SPRING_PROFILES_ACTIVE="prod   "
+#ENTRYPOINT ["java", "-jar", "b_app.jar"]
+
+#-----------
+FROM openjdk:17-jdk-slim
+COPY build/libs/*.jar app.jar
+ENV SPRING_PROFILES_ACTIVE="dev,s3,jwt,toss,ses"
+ENTRYPOINT ["java", "-jar", "app.jar"]
