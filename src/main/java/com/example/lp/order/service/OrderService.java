@@ -4,6 +4,7 @@ import com.example.lp.member.entity.Member;
 import com.example.lp.member.repository.MemberRepository;
 import com.example.lp.order.dto.request.AddressRequest;
 import com.example.lp.order.dto.request.OrderCancelRequest;
+import com.example.lp.order.dto.request.OrderProductInfo;
 import com.example.lp.order.dto.request.OrderRequest;
 import com.example.lp.order.dto.response.OrderCancelPendingResponse;
 import com.example.lp.order.dto.response.OrderDetailResponse;
@@ -11,6 +12,8 @@ import com.example.lp.order.entity.Order;
 import com.example.lp.order.entity.OrderDetail;
 import com.example.lp.order.repository.OrderDetailRepository;
 import com.example.lp.order.repository.OrderRepository;
+import com.example.lp.product.entity.ProductSku;
+import com.example.lp.product.repository.ProductSkuRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
@@ -25,29 +28,52 @@ public class OrderService {
     private final MemberRepository memberRepository;
     private final OrderDetailRepository orderDetailRepository;
     private final StockService stockService;
+    private final ProductSkuRepository productSkuRepository;
 
     public OrderService(OrderRepository orderRepository, OrderDetailService orderDetailService,
                         MemberRepository memberRepository, OrderDetailRepository orderDetailRepository,
-                        StockService stockService) {
+                        StockService stockService, ProductSkuRepository productSkuRepository) {
         this.orderRepository = orderRepository;
         this.orderDetailService = orderDetailService;
         this.memberRepository = memberRepository;
         this.orderDetailRepository = orderDetailRepository;
         this.stockService = stockService;
+        this.productSkuRepository = productSkuRepository;
     }
 
+
+//    @Transactional
+//    public Long createOrder(Authentication auth, OrderRequest orderRequest) {
+//        // 1. Redis 재고 선점을 먼저 시도합니다.
+//        boolean stockDecreased = stockService.decreaseStock(orderRequest);
+//
+//        // 2. 재고 선점에 실패하면, 예외를 발생시켜 주문 절차를 중단합니다.
+//        if (!stockDecreased) {
+//            throw new RuntimeException("재고가 부족합니다.");
+//        }
+//        Member member = memberRepository.findByEmail(auth.getName())
+//                .orElseThrow(()-> new RuntimeException("service : 멤버가 없습니다."));
+//        Order order = new Order(orderRequest.totalPrice(), member);
+//        Order createdOrder = orderRepository.save(order);
+//
+//        orderDetailService.createOrderDetail(createdOrder, member, orderRequest.orderProductInfoList());
+//        return createdOrder.getId();
+//    }
+
     @Transactional
-    public Long createOrder(Authentication auth, OrderRequest orderRequest) {
-        // 1. Redis 재고 선점을 먼저 시도합니다.
-        boolean stockDecreased = stockService.decreaseStock(orderRequest);
+    public synchronized Long createOrder(Authentication auth, OrderRequest orderRequest) {
 
-        // 2. 재고 선점에 실패하면, 예외를 발생시켜 주문 절차를 중단합니다.
-        if (!stockDecreased) {
-            throw new RuntimeException("재고가 부족합니다.");
+        for (OrderProductInfo orderProductInfo : orderRequest.orderProductInfoList()) {
+            ProductSku productSku = productSkuRepository.findByIdForUpdate(orderProductInfo.productSkuId()).
+                    orElseThrow(() -> new RuntimeException());
+            if (productSku.getQuantity()-orderProductInfo.quantity()<0){
+                throw new RuntimeException("재고가 부족합니다.");
+            }
+            productSku.reduceAmount(orderProductInfo.quantity());
+
         }
-
         Member member = memberRepository.findByEmail(auth.getName())
-                .orElseThrow(()-> new RuntimeException());
+                .orElseThrow(()-> new RuntimeException("service : 멤버가 없습니다."));
         Order order = new Order(orderRequest.totalPrice(), member);
         Order createdOrder = orderRepository.save(order);
 
