@@ -16,9 +16,9 @@ public class ProductSku {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "product_sku_id")
     private Long id;
-
-    @Column(name = "sku_code", length = 100)
-    private String productSkuCode;
+//
+//    @Column(name = "sku_code", length = 100)
+//    private String productSkuCode;
 
     @Column(name = "color", length = 5, nullable = false)
     private String color;
@@ -66,7 +66,7 @@ public class ProductSku {
     public ProductSku(Product product, String productSkuCode, String color, String size, Long quantity,
                       OffsetDateTime createdAt, OffsetDateTime updatedAt){
         this.product = product;
-        this.productSkuCode = productSkuCode;
+//        this.productSkuCode = productSkuCode;
         this.color = color;
         this.size = size;
         this.quantity = quantity;
@@ -79,9 +79,9 @@ public class ProductSku {
         return id;
     }
 
-    public String getProductSkuCode() {
-        return productSkuCode;
-    }
+//    public String getProductSkuCode() {
+//        return productSkuCode;
+//    }
 
     public String getColor() {
         return color;

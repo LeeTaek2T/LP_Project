@@ -5,9 +5,8 @@
 #COPY ${JAR_FILE} b_app.jar
 #ENV SPRING_PROFILES_ACTIVE="prod   "
 #ENTRYPOINT ["java", "-jar", "b_app.jar"]
-
 #-----------
-FROM openjdk:17-jdk-slim
+FROM eclipse-temurin:17-jdk-jammy
 COPY build/libs/*.jar app.jar
 ENV SPRING_PROFILES_ACTIVE="dev,s3,jwt,toss,ses"
 ENTRYPOINT ["java", "-jar", "app.jar"]

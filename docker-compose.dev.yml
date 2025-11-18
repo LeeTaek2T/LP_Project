@@ -14,8 +14,11 @@ services:
       SPRING_JPA_HIBERNATE_DDL_AUTO: none
       # DB 종류나 ddl-auto 옵션에 상관없이 무조건 data.sql을 실행합니다.
       SPRING_SQL_INIT_MODE: always
+      SPRING_REDIS_HOST: host.docker.internal
+      SPRING_REDIS_PORT: 6379
     depends_on: # app 서비스 시작 전 실행되어야 하는 서비스
       - db
+      - redis
 
   db: # db 서비스
     container_name: h2 # 컨테이너 이름

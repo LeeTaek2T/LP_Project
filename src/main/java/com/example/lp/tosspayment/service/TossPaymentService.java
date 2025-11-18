@@ -1,6 +1,6 @@
 package com.example.lp.tosspayment.service;
 
-import com.example.lp.kafka.dto.request.PaymentCompleteMessage;
+//import com.example.lp.kafka.dto.request.PaymentCompleteMessage;
 import com.example.lp.order.entity.OrderDetail;
 import com.example.lp.order.repository.OrderDetailRepository;
 import com.example.lp.product.service.ProductSkuService;
@@ -26,17 +26,16 @@ public class TossPaymentService {
     private final OrderRepository orderRepository;
     private final ProductSkuService productSkuService;
     private final OrderDetailRepository orderDetailRepository;
-    private final KafkaTemplate<String, PaymentCompleteMessage> kafkaTemplate;
+//    private final KafkaTemplate<String, PaymentCompleteMessage> kafkaTemplate;
 
     public TossPaymentService(TossPaymentRepository tossPaymentRepository,
                               OrderRepository orderRepository,
-                              ProductSkuService productSkuService, OrderDetailRepository orderDetailRepository,
-                              KafkaTemplate<String, PaymentCompleteMessage> kafkaTemplate) {
+                              ProductSkuService productSkuService, OrderDetailRepository orderDetailRepository) {
         this.tossPaymentRepository = tossPaymentRepository;
         this.orderRepository = orderRepository;
         this.productSkuService = productSkuService;
         this.orderDetailRepository = orderDetailRepository;
-        this.kafkaTemplate = kafkaTemplate;
+//        this.kafkaTemplate = kafkaTemplate;
     }
 
     public PaymentPreResponse savePaymentPre(PaymentPreRequest paymentPreRequest, Long orderId) {
