@@ -1,6 +1,7 @@
 package com.example.lp.product.controller;
 
 import com.example.lp.product.dto.request.ProductRequest;
+import com.example.lp.product.dto.response.ProductAndSkuGroupResponse;
 import com.example.lp.product.dto.response.ProductAndSkuResponse;
 import com.example.lp.product.service.ProductService;
 import org.springframework.http.ResponseEntity;
@@ -24,9 +25,8 @@ public class ProductController {
     }
 
     @GetMapping("/product")
-    public ResponseEntity<List<ProductAndSkuResponse>> getAllProduct(@RequestParam(defaultValue = "0") int page,
-                                                                     @RequestParam(defaultValue = "10") int size){
-        List<ProductAndSkuResponse> productResponseList = productService.getAllProduct(page,size);
+    public ResponseEntity<List<ProductAndSkuGroupResponse>> getAllProduct(){
+        List<ProductAndSkuGroupResponse> productResponseList = productService.getAllProduct();
         return ResponseEntity.ok(productResponseList);
     }
 

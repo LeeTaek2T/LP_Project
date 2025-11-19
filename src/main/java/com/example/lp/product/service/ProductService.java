@@ -2,6 +2,9 @@ package com.example.lp.product.service;
 
 import com.example.lp.event.entity.EventItem;
 import com.example.lp.event.repository.EventItemRepository;
+import com.example.lp.product.dto.response.ProductAndSkuGroupResponse;
+import com.example.lp.product.dto.response.ProductSkuGroupResponse;
+import com.example.lp.product.entity.ProductSku;
 import com.example.lp.s3.service.S3ImageService;
 import com.example.lp.product.dto.request.ProductRequest;
 import com.example.lp.product.dto.response.ProductAndSkuResponse;
@@ -41,37 +44,30 @@ public class ProductService {
         Product savedProduct = productRepository.save(product);
     }
 
-    @Cacheable(
-            value = "prod:list",
-            key = "'v1:p=' + #page + ':s=' + #size",
-            sync = true
-    )
-    public List<ProductAndSkuResponse> getAllProduct(int page, int size) {
-        Pageable pageable = PageRequest.of(page, size);
-        Page<Product> productPage = productRepository.findAll(pageable);
-        return convertToProductAndSkuResponseList(productPage.getContent());
+//    @Cacheable(
+//            value = "prod:list",
+//            key = "'v1:p=' + #page + ':s=' + #size",
+//            sync = true
+//    )
+    public List<ProductAndSkuGroupResponse> getAllProduct() {
+        List<Product> productList = productRepository.findAllWithSku();
+        List<ProductAndSkuGroupResponse> productAndSkuGroupResponseList = new ArrayList<>();
+        for (Product product : productList) {
+            List<ProductSku> productSkuList = product.getProductSkuList();
+            List<ProductSkuGroupResponse> productSkuGroupResponseList = new ArrayList<>();
+            for (ProductSku productSku : productSkuList) {
+                ProductSkuGroupResponse productSkuGroupResponse = new ProductSkuGroupResponse(productSku.getId(),
+                        productSku.getSize(), productSku.getColor());
+                productSkuGroupResponseList.add(productSkuGroupResponse);
+            }
+            ProductAndSkuGroupResponse productAndSkuGroupResponse = new ProductAndSkuGroupResponse(product.getId(),
+                    product.getName(), product.getPrice(), product.getCategory(), product.getCoverImageUrl(),
+                    null, null, productSkuGroupResponseList);
+            productAndSkuGroupResponseList.add(productAndSkuGroupResponse);
+        }
+        return productAndSkuGroupResponseList;
     }
 
-    private List<ProductAndSkuResponse> convertToProductAndSkuResponseList(List<Product> productList){
-        List<ProductAndSkuResponse> productAndSkuResponseList = new ArrayList<>();
-        for(Product product : productList){
-            List<ProductSkuResponse> productSkuResponseList = productSkuService.convertToProductSkuResponseList(product);
-            ProductAndSkuResponse productAndSkuResponse = confirmProductEventItem(product, productSkuResponseList);
-            productAndSkuResponseList.add(productAndSkuResponse);
-        }
-        return productAndSkuResponseList;
-    }
-
-    private ProductAndSkuResponse confirmProductEventItem(Product product, List<ProductSkuResponse> productSkuResponseList){
-        if (product.getSaled()){
-            EventItem eventItem = eventItemRepository.findByProduct(product)
-                    .orElseThrow(() -> new RuntimeException());
-            return new ProductAndSkuResponse(product.getId(), product.getName(), product.getPrice(), product.getCategory(),
-                    product.getCoverImageUrl(), product.getSaled(), eventItem.getSalePrice(), productSkuResponseList);
-        }
-        return new ProductAndSkuResponse(product.getId(), product.getName(), product.getPrice(), product.getCategory(),
-                product.getCoverImageUrl(), product.getSaled(), null, productSkuResponseList);
-    }
 
     public List<ProductAndSkuResponse> getAllProductForSeller() {
         List<Product> productList = productRepository.findAll();
@@ -87,6 +83,17 @@ public class ProductService {
             productAndSkuResponseList.add(productAndSkuResponse);
         }
         return productAndSkuResponseList;
+    }
+
+    private ProductAndSkuResponse confirmProductEventItem(Product product, List<ProductSkuResponse> productSkuResponseList){
+        if (product.getSaled()){
+            EventItem eventItem = eventItemRepository.findByProduct(product)
+                    .orElseThrow(() -> new RuntimeException());
+            return new ProductAndSkuResponse(product.getId(), product.getName(), product.getPrice(), product.getCategory(),
+                    product.getCoverImageUrl(), product.getSaled(), eventItem.getSalePrice(), productSkuResponseList);
+        }
+        return new ProductAndSkuResponse(product.getId(), product.getName(), product.getPrice(), product.getCategory(),
+                product.getCoverImageUrl(), product.getSaled(), null, productSkuResponseList);
     }
 
     public ProductAndSkuResponse getProductAndSkuByProductId(Long productId) {

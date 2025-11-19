@@ -148,7 +148,7 @@ public class OrderServiceTest {
 //        System.out.println("총 소요시간: " + Duration.between(start, end).toMillis() + " ms");
 //
 //
-//        ProductSku sku = productSkuRepository.findById(skuId).orElseThrow(()->new RuntimeException("테스트 sku아보임"));
+//        Produ ctSku sku = productSkuRepository.findById(skuId).orElseThrow(()->new RuntimeException("테스트 sku아보임"));
 //        System.out.println("DB 최종 quantity: " + sku.getQuantity());
 ////        // assert로 테스트 통과 여부 확인
 //        assertThat(sku.getQuantity()).isEqualTo(0);

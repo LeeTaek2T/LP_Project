@@ -5,10 +5,9 @@ import lombok.Builder;
 
 import java.util.List;
 
-
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @Builder
-public record ProductAndSkuResponse(
+public record ProductAndSkuGroupResponse(
         Long productId,
         String name,
         Long price,
@@ -16,5 +15,5 @@ public record ProductAndSkuResponse(
         String coverImageUrl,
         Boolean isSaled,
         Long salePrice,
-        List<ProductSkuResponse> productSkuResponseList){
+        List<ProductSkuGroupResponse> productSkuGroupResponseList){
 }

@@ -80,6 +80,10 @@ public class Product {
         return isSaled;
     }
 
+    public List<ProductSku> getProductSkuList() {
+        return productSkuList;
+    }
+
     public void changeOnIsSaled() {
         this.isSaled = true;
     }

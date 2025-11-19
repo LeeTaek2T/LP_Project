@@ -16,8 +16,8 @@ public class ProductSku {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "product_sku_id")
     private Long id;
-//
-//    @Column(name = "sku_code", length = 100)
+
+    //    @Column(name = "sku_code", length = 100)
 //    private String productSkuCode;
 
     @Column(name = "color", length = 5, nullable = false)
