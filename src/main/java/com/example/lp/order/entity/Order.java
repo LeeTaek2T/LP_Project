@@ -13,6 +13,7 @@ import java.util.List;
 public class Order {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name="order_id")
     private Long id;
 
     @Column(name = "total_price", nullable = false)
@@ -36,7 +37,7 @@ public class Order {
     @Column(name = "created_at")
     private OffsetDateTime createdAt;
 
-    @Column(name = "cancel_reason")
+    @Column(name = "cancel_reason", nullable = true)
     private String cancelReason;
 
     @Column(name = "state")

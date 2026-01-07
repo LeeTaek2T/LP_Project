@@ -1,9 +1,11 @@
 package com.example.lp.event.controller;
 
 import com.example.lp.event.dto.Request.EventItemRequest;
+import com.example.lp.event.dto.Response.EventItemCacheResponse;
 import com.example.lp.event.dto.Response.EventItemForSellerResponse;
 import com.example.lp.event.dto.Response.EventItemResponse;
 import com.example.lp.event.service.EventItemService;
+import com.example.lp.view.EventView;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -14,7 +16,6 @@ import java.net.URI;
 @RequestMapping("/api")
 public class EventItemController {
     private final EventItemService eventItemService;
-
     public EventItemController(EventItemService eventItemService){
         this.eventItemService = eventItemService;
     }
@@ -25,6 +26,21 @@ public class EventItemController {
         List<EventItemResponse> eventItemResponseList = eventItemService.getAllEventItemByEventId(eventId);
         return ResponseEntity.ok(eventItemResponseList);
     }
+
+    //특정 이벤트의 모든 이벤트 상품 조회2
+    @GetMapping("/event/{eventId}/eventItem2")
+    public ResponseEntity<EventView> getAllEventItemByEventId2(@PathVariable Long eventId) {
+        EventView eventView = eventItemService.getAllEventItemByEventId2(eventId);
+        return ResponseEntity.ok(eventView);
+    }
+
+    //특정 이벤트의 모든 이벤트 상품 조회3
+    @GetMapping("/event/{eventId}/eventItem3")
+    public ResponseEntity<List<EventItemCacheResponse>> getAllEventItemByEventId3(@PathVariable Long eventId) {
+        List<EventItemCacheResponse> eventItemResponseList = eventItemService.getAllEventItemByEventId3(eventId);
+        return ResponseEntity.ok(eventItemResponseList);
+    }
+
 
     //판매자가 특정 이벤트에 이벤트 아이템 등록
     @PostMapping("/seller/event/{eventId}/eventItem")

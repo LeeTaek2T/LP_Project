@@ -8,6 +8,7 @@ import com.example.lp.order.dto.request.OrderProductInfo;
 import com.example.lp.order.dto.request.OrderRequest;
 import com.example.lp.order.dto.response.OrderCancelPendingResponse;
 import com.example.lp.order.dto.response.OrderDetailResponse;
+import com.example.lp.order.dto.response.OrderResponse;
 import com.example.lp.order.entity.Order;
 import com.example.lp.order.entity.OrderDetail;
 import com.example.lp.order.repository.OrderDetailRepository;
@@ -18,6 +19,7 @@ import jakarta.transaction.Transactional;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -70,7 +72,6 @@ public class OrderService {
                 throw new RuntimeException("재고가 부족합니다.");
             }
             productSku.reduceAmount(orderProductInfo.quantity());
-
         }
         Member member = memberRepository.findByEmail(auth.getName())
                 .orElseThrow(()-> new RuntimeException("service : 멤버가 없습니다."));
@@ -111,7 +112,7 @@ public class OrderService {
         for (OrderDetail orderDetail : orderDetailList) {
             OrderDetailResponse orderDetailResponse = new OrderDetailResponse(orderDetail.getId(),
                     orderDetail.getPrice(), orderDetail.getName(), orderDetail.getQuantity(),
-                    orderDetail.getSize() ,orderDetail.getColor(),orderDetail.getProductSku().getId());
+                    orderDetail.getSize() ,orderDetail.getColor());
             orderDetailResponseList.add(orderDetailResponse);
         }
         return orderDetailResponseList;
@@ -139,5 +140,27 @@ public class OrderService {
         order.setDearName(addressRequest.dearName());
         order.setPostCode(addressRequest.postcode());
         order.setPhoneNumber(addressRequest.phoneNumber());
+    }
+
+    public List<OrderResponse> getAllOrder(Authentication auth, OffsetDateTime startDate,
+                                           OffsetDateTime endDate) {
+        Member member = memberRepository.findByEmail(auth.getName())
+                .orElseThrow(() -> new RuntimeException("이메일에 해당하는 회원이 없습니다."));
+        List<Order> orderList = orderRepository.findOrderAndOrderDetailByMemberAndDate(member, startDate, endDate);
+        List<OrderResponse> orderResponseList = new ArrayList<>();
+        for (Order order : orderList) {
+            List<OrderDetailResponse> orderDetailResponseList = new ArrayList<>();
+            for (OrderDetail orderDetail : order.getOrderDetailList()) {
+                OrderDetailResponse orderDetailReponse = new OrderDetailResponse(orderDetail.getId(),
+                        orderDetail.getPrice(), orderDetail.getName(), orderDetail.getQuantity(),
+                        orderDetail.getColor(), orderDetail.getSize());
+                orderDetailResponseList.add(orderDetailReponse);
+            }
+            OrderResponse orderResponse = new OrderResponse(order.getId(), member.getId(), order.getTotalPrice(),
+                    order.getAddress(), order.getAddressDetail(), order.getPostCode(), order.getDearName(),
+                    order.getPhoneNumber(), orderDetailResponseList);
+            orderResponseList.add(orderResponse);
+        }
+        return orderResponseList;
     }
 }

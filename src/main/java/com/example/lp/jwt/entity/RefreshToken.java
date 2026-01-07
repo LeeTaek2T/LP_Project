@@ -1,7 +1,6 @@
 package com.example.lp.jwt.entity;
 
 import jakarta.persistence.*;
-
 import java.time.Instant;
 
 @Entity

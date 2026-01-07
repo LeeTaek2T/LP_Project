@@ -41,11 +41,11 @@ public class ProductSkuService {
     }
 
     public List<ProductSkuResponse> convertToProductSkuResponseListForEventItem(Product product){
-        List<ProductSku> productSkuList = productSkuRepository.findAllByProductId(product.getId());
+//        List<ProductSku> productSkuList = productSkuRepository.findAllByProductId(product.getId());
         List<ProductSkuResponse> productSkuResponseList = new ArrayList<>();
-        for(ProductSku productSku : productSkuList){
-            ProductSkuResponse productSkuResponse = new ProductSkuResponse(null,  productSku.getSize(),
-                    productSku.getColor(), null, null);
+        for(ProductSku productSku : product.getProductSkuList()){
+            ProductSkuResponse productSkuResponse = new ProductSkuResponse(productSku.getId(),  productSku.getSize(),
+                    productSku.getColor(), productSku.getQuantity(), null);
             productSkuResponseList.add(productSkuResponse);
         }
         return productSkuResponseList;

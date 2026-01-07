@@ -36,13 +36,13 @@ public class Member{
     @Column(name = "updated_at", nullable = false)
     private OffsetDateTime updatedAt;
 
-    @Column(name = "address")
+    @Column(name = "address", nullable = true)
     private String address;
 
-    @Column(name = "address_detail")
+    @Column(name = "address_detail", nullable = true)
     private String addressDetail;
 
-    @Column(name = "postcode")
+    @Column(name = "postcode", nullable = true  )
     private String postcode;
 
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)

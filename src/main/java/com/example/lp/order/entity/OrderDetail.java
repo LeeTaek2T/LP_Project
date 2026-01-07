@@ -11,6 +11,7 @@ import java.time.LocalDateTime;
 public class OrderDetail {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "order_detail_id")
     private Long id;
 
     @Column(name = "price", nullable = false)
@@ -30,9 +31,6 @@ public class OrderDetail {
 
     @Column(name = "color", nullable = false)
     private String color;
-
-    @Column(name = "paid_at")
-    private LocalDateTime paidAt;
 
     @Column(name = "state")
     private String state;
@@ -83,10 +81,6 @@ public class OrderDetail {
 
     public String getColor() {
         return color;
-    }
-
-    public LocalDateTime getPaidAt() {
-        return paidAt;
     }
 
     public Member getMember() {

@@ -5,6 +5,5 @@ public record OrderDetailResponse(Long orderDetailId,
                                   String name,
                                   Long quantity,
                                   String color,
-                                  String size,
-                                  Long productSkuId) {
+                                  String size) {
 }

@@ -13,6 +13,6 @@ public record OrderResponse(
         String postcode,
         String dearName,
         String phoneNumber,
-        List<OrderProductInfo> orderProductInfoList
+        List<OrderDetailResponse> orderDetailResponseList
 ) {
 }

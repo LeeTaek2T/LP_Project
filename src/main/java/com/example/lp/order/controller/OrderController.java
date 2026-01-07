@@ -4,13 +4,16 @@ import com.example.lp.order.dto.request.AddressRequest;
 import com.example.lp.order.dto.request.OrderCancelRequest;
 import com.example.lp.order.dto.request.OrderRequest;
 import com.example.lp.order.dto.response.OrderCancelPendingResponse;
+import com.example.lp.order.dto.response.OrderResponse;
 import com.example.lp.order.service.OrderService;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
+import java.time.OffsetDateTime;
 import java.util.List;
 
 @RestController
@@ -61,5 +64,16 @@ public class OrderController {
     public ResponseEntity<List<OrderCancelPendingResponse>> getAllOrderCancelPending(Authentication auth) {
         List<OrderCancelPendingResponse> orderCancelPendingResponseList = orderService.getAllOrderCancelPending();
         return ResponseEntity.ok(orderCancelPendingResponseList);
+    }
+
+    @GetMapping("/order")
+    public ResponseEntity<List<OrderResponse>> getAllOrder(Authentication auth,
+                                                           @RequestParam(required = false)
+                                                           @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
+                                                           OffsetDateTime startDate,
+                                                           @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
+                                                           OffsetDateTime endDate) {
+        List<OrderResponse> orderResponseList = orderService.getAllOrder(auth, startDate, endDate);
+        return ResponseEntity.ok(orderResponseList);
     }
 }
